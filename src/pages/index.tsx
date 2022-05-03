@@ -8,7 +8,6 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react";
-import { AtSignIcon } from "@chakra-ui/icons";
 
 export default function Home() {
   return (
@@ -34,6 +33,7 @@ export default function Home() {
               pointerEvents="none"
               color="gray.300"
               fontSize="1.2em"
+              // eslint-disable-next-line react/no-children-prop
               children="@"
             />
             <Input
@@ -59,6 +59,7 @@ export default function Home() {
               pointerEvents="none"
               color="gray.300"
               fontSize="1.2em"
+              // eslint-disable-next-line react/no-children-prop
               children="*"
             />
 
