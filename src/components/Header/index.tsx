@@ -8,22 +8,22 @@ export function Header() {
       as="header"
       w="70%"
       h="15%"
-      justify="space-between"
+      justify="center"
       align="center"
+      maxWidth={1480}
     >
       <Box
         mx="auto"
-        mt="4"
+        mt="6"
         px="6"
         width="100%"
-        maxWidth={1480}
         h="20"
         align="center"
-        justify="center"
+        borderBottom="5px solid"
+        borderColor="project.text"
       >
         <Image w="25%" src="/assets/logos/logo_fundo_text.png"></Image>
       </Box>
-      <Box width="100%" maxWidth={1480} height="1" bg="project.text"></Box>
     </Flex>
   );
 }

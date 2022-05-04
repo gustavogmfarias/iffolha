@@ -4,10 +4,9 @@ import { Sidebar } from "../../components/Sidebar";
 
 export default function Dashboard() {
   return (
-    <Flex w="100vw" h="100vh" justify="center">
-      <Sidebar />
-
+    <Flex w="100vw" h="100vh" justify="center" direction="row-reverse">
       <Header />
+      <Sidebar />
     </Flex>
   );
 }

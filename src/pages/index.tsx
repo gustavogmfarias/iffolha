@@ -2,12 +2,16 @@ import {
   Box,
   Button,
   Flex,
+  Icon,
   Image,
   Input,
   InputGroup,
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react";
+
+import { RiLockPasswordFill } from "react-icons/ri";
+import { AiTwotoneMail } from "react-icons/ai";
 
 export default function Home() {
   return (
@@ -24,17 +28,21 @@ export default function Home() {
         boxShadow="md"
       >
         <Box mb="8">
-          <Image src="/assets/logos/logo-com-texto.png" alt="test" />
+          <Image src="/assets/logos/logo_fundo_text.png" alt="test" />
         </Box>
 
         <Stack spacing="4">
           <InputGroup>
             <InputLeftElement
+              borderRight="0.8px solid"
+              borderColor="project.text"
               pointerEvents="none"
               color="gray.300"
               fontSize="1.2em"
               // eslint-disable-next-line react/no-children-prop
-              children="@"
+              children={
+                <Icon as={AiTwotoneMail} font-size="12" color="project.text" />
+              }
             />
             <Input
               name="login"
@@ -59,8 +67,16 @@ export default function Home() {
               pointerEvents="none"
               color="gray.300"
               fontSize="1.2em"
+              borderRight="0.8px solid"
+              borderColor="project.text"
               // eslint-disable-next-line react/no-children-prop
-              children="*"
+              children={
+                <Icon
+                  as={RiLockPasswordFill}
+                  font-size="12"
+                  color="project.text"
+                />
+              }
             />
 
             <Input
@@ -88,7 +104,8 @@ export default function Home() {
             mt="4"
             borderRadius="24"
             width="100%"
-            colorScheme="green"
+            bg="project.text"
+            color="white"
             fontFamily="bold"
           >
             Entrar
