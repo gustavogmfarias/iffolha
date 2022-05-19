@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "../styles/theme";
 import Head from "next/head";
+import { AuthProvider } from "../contexts/AuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,9 +10,11 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title> IFFolha Itaperuna | www.iffolhaitap.com.br </title>
       </Head>
-      <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
-      </ChakraProvider>
+      <AuthProvider>
+        <ChakraProvider theme={theme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </AuthProvider>
     </>
   );
 }
