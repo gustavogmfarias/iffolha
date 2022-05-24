@@ -1,32 +1,21 @@
 type User = {
-  permissions: string[];
-  roles: string[];
+  role: string;
 };
 
 type ValidateUserPermissionsParams = {
   user: User;
-  permissions?: string[];
-  roles?: string[];
+  role: string;
 };
 export function validateUserPermissions({
   user,
-  permissions,
-  roles,
+  role,
 }: ValidateUserPermissionsParams) {
-  if (permissions?.length > 0) {
-    const hasAllPermissions = permissions.every((permission) => {
-      return user.permissions.includes(permission);
-    });
+  if (role) {
+    let hasAllRoles: string;
 
-    if (!hasAllPermissions) {
-      return false;
+    if (role === "ADMIN") {
+      hasAllRoles = user.role;
     }
-  }
-
-  if (roles?.length > 0) {
-    const hasAllRoles = roles.some((role) => {
-      return user.roles.includes(role);
-    });
 
     if (!hasAllRoles) {
       return false;

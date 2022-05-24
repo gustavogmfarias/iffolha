@@ -8,7 +8,7 @@ import { AuthTokenError } from "../services/errors/AuthTokenError";
 import decode from "jwt-decode";
 import { validateUserPermissions } from "./validateUserPermissions";
 
-type WithSSRAuthOptions = { permissions?: string[]; roles?: string[] };
+type WithSSRAuthOptions = { role: string };
 
 export function withSSRAuth<P>(
   fn: GetServerSideProps<P>,
@@ -31,13 +31,12 @@ export function withSSRAuth<P>(
       };
 
     if (options) {
-      const user = decode<{ permissions: string[]; roles: string[] }>(token);
-      const { permissions, roles } = options;
+      const user = decode<{ role: string }>(token);
+      const { role } = options;
 
       const userHasValidPermissions = validateUserPermissions({
         user,
-        permissions,
-        roles,
+        role,
       });
 
       if (!userHasValidPermissions) {

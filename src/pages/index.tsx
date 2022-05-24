@@ -4,41 +4,52 @@ import {
   Flex,
   Icon,
   Image,
-  Input,
   InputGroup,
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react";
-
+import { SubmitHandler, useForm, FieldError } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { AiTwotoneMail } from "react-icons/ai";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { withSSRGuest } from "../../utils/withSSRGuest";
+import { Input } from "../components/Form/Input";
+
+type SignInFormData = {
+  email: string;
+  password: string;
+};
+
+const signInFormSchema = yup.object().shape({
+  email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
+  password: yup.string().required("Senha obrigatória"),
+});
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { register, handleSubmit, formState } = useForm({
+    resolver: yupResolver(signInFormSchema),
+  });
+
+  const { errors } = formState;
 
   const { signIn } = useContext(AuthContext);
 
-  useEffect(() => {});
+  const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  async function handleSubmit(event: FormEvent) {
-    event.preventDefault();
-
-    const data = {
-      email,
-      password,
-    };
-
-    await signIn(data);
-  }
+    console.log(values);
+    await signIn(values);
+  };
+  console.log(formState.errors);
 
   return (
     <Flex w="100vw" h="100vh" align="center" justify="center">
       <Flex
         as="form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(handleSignIn)}
         w="100%"
         maxWidth={360}
         bg="project.main"
@@ -48,9 +59,9 @@ export default function Home() {
         flexDirection="column"
         boxShadow="md"
       >
-        <Box mb="8">
-          <Image src="/assets/logos/logo_fundo_text.png" alt="test" />
-        </Box>
+        <Flex mb="8" alignItems="center" justifyContent="center">
+          <Image w="40" src="/assets/logos/logo_fundo_text.png" alt="test" />
+        </Flex>
 
         <Stack spacing="4">
           <InputGroup>
@@ -66,10 +77,11 @@ export default function Home() {
               }
             />
             <Input
-              name="login"
+              name="email"
+              id="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              error={errors.email}
+              {...register("email")}
               placeholder="insira seu e-mail"
               _placeholder={{
                 color: "project.text",
@@ -106,8 +118,8 @@ export default function Home() {
               fontFamily=""
               name="password"
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              error={errors.password}
+              {...register("password")}
               placeholder="insira sua senha"
               _placeholder={{
                 color: "project.text",
@@ -132,6 +144,7 @@ export default function Home() {
             bg="project.text"
             color="white"
             fontFamily="bold"
+            isLoading={formState.isSubmitting}
           >
             Entrar
           </Button>
@@ -140,3 +153,7 @@ export default function Home() {
     </Flex>
   );
 }
+
+export const getServerSideProps = withSSRGuest(async (ctx) => {
+  return { props: {} }; //caso não tenha o cookie, não é pra fazer nada
+});
