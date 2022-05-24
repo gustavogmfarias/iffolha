@@ -5,8 +5,7 @@ import { api } from "../services/apiClient";
 
 type User = {
   email: string;
-  permissions: string[];
-  roles: string[];
+  role: string;
 };
 
 type SignInCredentials = {
@@ -32,7 +31,6 @@ let authChannel: BroadcastChannel;
 export function signOut() {
   destroyCookie(undefined, "nextauth.token");
   destroyCookie(undefined, "nextauth.refreshToken");
-  authChannel.postMessage("signOut");
   Router.push("/");
 }
 
@@ -41,29 +39,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const isAuthenticated = !!user; // o !! significa que se estiver vazio retorna falso e se não, true
 
   useEffect(() => {
-    authChannel = new BroadcastChannel("auth");
-
-    authChannel.onmessage = (message) => {
-      switch (message.data) {
-        case "signOut":
-          signOut();
-          break;
-
-        default:
-          break;
-      }
-    };
-  }, []);
-
-  useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
     if (token) {
       api
-        .get("/me")
+        .get("/profile")
         .then((response) => {
-          const { email, permissions, roles } = response.data;
+          const { email, role } = response.data;
 
-          setUser({ email, permissions, roles });
+          setUser({ email, role });
         })
         .catch((error) => {
           signOut();
@@ -75,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await api.post("sessions", { email, password });
 
-      const { token, refreshToken, permissions, roles } = response.data;
+      const { token, refreshToken, role } = response.data;
 
       setCookie(undefined, "nextauth.token", token, {
         maxAge: 60 * 60 * 24 * 30, // 30 days
@@ -86,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      setUser({ email, permissions, roles });
+      setUser({ email, role });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
