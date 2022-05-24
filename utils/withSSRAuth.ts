@@ -53,5 +53,12 @@ export function withSSRAuth<P>(
         return { redirect: { destination: "/", permanent: false } };
       }
     }
+
+    return {
+      redirect: {
+        destination: "/error", // Em caso de um erro não esperado, você pode redirecionar para uma página publica de erro genérico
+        permanent: false,
+      },
+    };
   };
 }

@@ -77,6 +77,7 @@ export default function Home() {
               }
             />
             <Input
+              paddingLeft="50px"
               name="email"
               id="email"
               type="email"
@@ -115,7 +116,7 @@ export default function Home() {
             />
 
             <Input
-              fontFamily=""
+              paddingLeft="50px"
               name="password"
               type="password"
               error={errors.password}
