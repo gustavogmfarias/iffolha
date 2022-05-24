@@ -34,7 +34,9 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         ref={ref}
         {...rest}
       />
-      {!!error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+      {!!error && (
+        <FormErrorMessage color="white">{error.message}</FormErrorMessage>
+      )}
     </FormControl>
   );
 };
