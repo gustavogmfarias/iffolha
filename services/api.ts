@@ -7,6 +7,10 @@ import { AuthTokenError } from "./errors/AuthTokenError";
 let isRefreshing = false;
 let failedRequestQueue = [];
 
+interface AxiosErrorResponse {
+  code?: string;
+}
+
 export function setupAPIClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
 
@@ -21,7 +25,7 @@ export function setupAPIClient(ctx = undefined) {
     (response) => {
       return response;
     },
-    (error: AxiosError) => {
+    (error: AxiosError<AxiosErrorResponse>) => {
       if (error.response.status === 401) {
         if (error.response.data?.code === "token.expired") {
           cookies = parseCookies(ctx);
