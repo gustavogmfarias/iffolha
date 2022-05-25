@@ -1,10 +1,13 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { setCookie, destroyCookie } from "nookies";
 import Router from "next/router";
 import { api } from "../../services/apiClient";
 
 type User = {
+  avatar_url: string;
   email: string;
+  id: string;
+  name: string;
   role: string;
 };
 
@@ -51,7 +54,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      setUser({ email, role });
+      const userLogado = await api.get("profile", { avatar_url, id, name });
+
+      // useEffect(() => {
+      //   api
+      //     .get("/users/profile")
+      //     .then((response) => )
+      //     .catch((err) => console.log(err));
+      // }, []);
+
+      setUser({ email, role, avatar_url, id });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 

@@ -9,7 +9,6 @@ import { AuthContext } from "../../contexts/AuthContext";
 
 export default function Dashboard() {
   const { user, signOut, isAuthenticated } = useContext(AuthContext);
-  let userLogado;
 
   return (
     <Flex w="100vw" h="100vh" justify="center" direction="row-reverse">
