@@ -11,7 +11,7 @@ export function NavLink() {
       fontWeight="bold"
       p="2"
     >
-      <Icon as={FaUser} font-size="12" color="project.text" />
+      <Icon as={FaUser} fontSize="12" color="project.text" />
       <Text mr="10" fontSize="12" color="project.text">
         Usuários
       </Text>
