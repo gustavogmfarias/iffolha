@@ -38,7 +38,7 @@ export function setupAPIClient(ctx = undefined) {
                 const { token } = response.data;
 
                 setCookie(ctx, "nextauth.token", token, {
-                  maxAge: 60 * 60 * 24 * 30, // 30 days
+                  maxAge: 15, // 15 segundos
                   path: "/",
                 });
 
@@ -47,7 +47,7 @@ export function setupAPIClient(ctx = undefined) {
                   "nextauth.refreshToken",
                   response.data.refreshToken,
                   {
-                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                    maxAge: 60 * 60 * 24 * 15, // 30 days
                     path: "/",
                   }
                 );
