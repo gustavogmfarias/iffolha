@@ -54,16 +54,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      const userLogado = await api.get("profile", { avatar_url, id, name });
+      const userLogado = await api.get<User>("users/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      // useEffect(() => {
-      //   api
-      //     .get("/users/profile")
-      //     .then((response) => )
-      //     .catch((err) => console.log(err));
-      // }, []);
-
-      setUser({ email, role, avatar_url, id });
+      setUser({ ...userLogado });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
