@@ -43,7 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const { token, refresh_token, role } = response.data;
 
       setCookie(undefined, "nextauth.token", token, {
-        maxAge: 15, // 15 seg
+        maxAge: 60 * 15, // 15 minutos
         path: "/",
       });
       setCookie(undefined, "nextauth.refreshToken", refresh_token, {

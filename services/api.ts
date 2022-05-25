@@ -38,7 +38,7 @@ export function setupAPIClient(ctx = undefined) {
                 const { token } = response.data;
 
                 setCookie(ctx, "nextauth.token", token, {
-                  maxAge: 15, // 15 segundos
+                  maxAge: 60 * 15, // 15 minutos
                   path: "/",
                 });
 
