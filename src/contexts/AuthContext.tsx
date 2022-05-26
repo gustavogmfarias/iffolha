@@ -1,14 +1,14 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { setCookie, destroyCookie } from "nookies";
+import { setCookie, destroyCookie, parseCookies } from "nookies";
 import Router from "next/router";
 import { api } from "../../services/apiClient";
 
 type User = {
-  avatar_url: string;
-  email: string;
-  id: string;
-  name: string;
-  role: string;
+  avatar_url?: string;
+  email?: string;
+  id?: string;
+  name?: string;
+  role?: string;
 };
 
 type SignInCredentials = {
@@ -54,11 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      const userLogado = await api.get<User>("users/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      setUser({ ...userLogado });
+      setUser({email, role});
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
@@ -66,6 +62,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async function getProfile({ avatar_url, email, id, name, role }: User) {
+    const cookies = parseCookies(ctx)
+    const token = cookies["nextauth.token"];
+
+    const userLogado = await api.get<User>("users/profile", {
+      headers: { Authorization: `Bearer ${}` },
+    });
   }
 
   return (
