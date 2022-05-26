@@ -5,11 +5,16 @@ import { api } from "../../../services/apiClient";
 import { withSSRAuth } from "../../../utils/withSSRAuth";
 import { Header } from "../../components/Header";
 import { Sidebar } from "../../components/Sidebar";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext, getProfile } from "../../contexts/AuthContext";
 
 export default function Dashboard() {
   const { user, signOut, isAuthenticated } = useContext(AuthContext);
   console.log(user);
+
+  useEffect(() => {
+    const userLogado = getProfile();
+  }, []);
+
   return (
     <Flex w="100vw" h="100vh" justify="center" direction="row-reverse">
       <Header />

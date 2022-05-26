@@ -35,6 +35,23 @@ export function signOut() {
   Router.push("/");
 }
 
+export async function getProfile(): Promise<User> {
+  // const cookies = parseCookies(ctx);
+  // const token = cookies["nextauth.token"];
+
+  try {
+    const userLogado = await api.get<User>("users/profile", {
+      headers: {
+        Authorization: `Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY1MzUyNTAxMSwiZXhwIjoxNjUzNTI1OTExLCJzdWIiOiI3OGFhNmJlNy02NmRmLTQ3NWMtYmQ4ZC05NDRlYTczYzNkM2QifQ.KexwGdqJWOQybEjWZ-ffgpUKC1M_h7g--zHomrQivTY`,
+      },
+    });
+
+    return { ...userLogado };
+  } catch (err) {
+    console.log(err);
+  }
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user; // o !! significa que se estiver vazio retorna falso e se não, true
@@ -54,7 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      setUser({email, role});
+      setUser({ email, role });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
@@ -62,15 +79,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  async function getProfile({ avatar_url, email, id, name, role }: User) {
-    const cookies = parseCookies(ctx)
-    const token = cookies["nextauth.token"];
-
-    const userLogado = await api.get<User>("users/profile", {
-      headers: { Authorization: `Bearer ${}` },
-    });
   }
 
   return (
