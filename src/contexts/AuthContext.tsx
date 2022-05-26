@@ -40,13 +40,13 @@ export async function getProfile(): Promise<User> {
   // const token = cookies["nextauth.token"];
 
   try {
-    const userLogado = await api.get<User>("users/profile", {
+    const response = await api.get<User>("users/profile", {
       headers: {
-        Authorization: `Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY1MzUyNTAxMSwiZXhwIjoxNjUzNTI1OTExLCJzdWIiOiI3OGFhNmJlNy02NmRmLTQ3NWMtYmQ4ZC05NDRlYTczYzNkM2QifQ.KexwGdqJWOQybEjWZ-ffgpUKC1M_h7g--zHomrQivTY`,
+        Authorization: `Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY1MzUyNTc4MCwiZXhwIjoxNjUzNTI2NjgwLCJzdWIiOiI3OGFhNmJlNy02NmRmLTQ3NWMtYmQ4ZC05NDRlYTczYzNkM2QifQ.SHsnHkgjBTKaSXFCh_iUO-h3qkmCPg6Dxensetfjbek`,
       },
     });
 
-    return { ...userLogado };
+    return response.data;
   } catch (err) {
     console.log(err);
   }
