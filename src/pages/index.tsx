@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { withSSRGuest } from "../../utils/withSSRGuest";
 import { Input } from "../components/Form/Input";
+import { ErrorFrame } from "../components/ErrorFrame/ErrorFrame";
 
 type SignInFormData = {
   email: string;
@@ -36,13 +37,16 @@ export default function Home() {
 
   const { signIn } = useContext(AuthContext);
 
+  let errorSignIn: string;
+
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 2000));
 
     try {
       await signIn(values);
     } catch (err) {
-      console.log(err.response.data);
+      errorSignIn = err.response.data;
+      console.log(errorSignIn);
     }
   };
 
@@ -98,6 +102,7 @@ export default function Home() {
               size="md"
               _hover={{ bgColor: "project.main_light" }}
             />
+            {!!errorSignIn && <ErrorFrame error={errorSignIn} />}
           </InputGroup>
           <InputGroup>
             <InputLeftElement
