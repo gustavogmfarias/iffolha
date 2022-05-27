@@ -35,35 +35,34 @@ export function signOut() {
   Router.push("/");
 }
 
-export async function getProfile(): Promise<User> {
-  // const cookies = parseCookies(ctx);
-  // const token = cookies["nextauth.token"];
-
-  try {
-    const response = await api.get<User>("users/profile", {
-      headers: {
-        Authorization: `Baerer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY1MzUyNTc4MCwiZXhwIjoxNjUzNTI2NjgwLCJzdWIiOiI3OGFhNmJlNy02NmRmLTQ3NWMtYmQ4ZC05NDRlYTczYzNkM2QifQ.SHsnHkgjBTKaSXFCh_iUO-h3qkmCPg6Dxensetfjbek`,
-      },
-    });
-
-    return response.data;
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user; // o !! significa que se estiver vazio retorna falso e se não, true
+
+  useEffect(() => {
+    const { "nextauth.token": token } = parseCookies();
+    if (token) {
+      api
+        .get("/users/profile")
+        .then((response) => {
+          const { avatar_url, email, id, name, role } = response.data;
+
+          setUser({ avatar_url, email, id, name, role });
+        })
+        .catch((error) => {
+          signOut();
+        });
+    }
+  }, []);
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
       const response = await api.post("sessions", { email, password });
 
-      const { token, refresh_token, role } = response.data;
+      const { token, refresh_token } = response.data;
 
       setCookie(undefined, "nextauth.token", token, {
-        maxAge: 60 * 15, // 15 minutos
+        maxAge: 60 * 15, // 15 min
         path: "/",
       });
       setCookie(undefined, "nextauth.refreshToken", refresh_token, {
@@ -71,13 +70,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
         path: "/",
       });
 
-      setUser({ email, role });
-
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
+
+      api
+        .get("/users/profile")
+        .then((response) => {
+          const { avatar_url, email, id, name, role } = response.data;
+
+          setUser({ avatar_url, email, id, name, role });
+        })
+        .catch((error) => {
+          signOut();
+        });
+
+      console.log(response.data);
 
       Router.push("/dashboard");
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
     }
   }
 

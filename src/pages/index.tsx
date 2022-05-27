@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Flex,
   Icon,
@@ -8,7 +7,7 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react";
-import { SubmitHandler, useForm, FieldError } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RiLockPasswordFill } from "react-icons/ri";
@@ -40,9 +39,12 @@ export default function Home() {
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    await signIn(values);
+    try {
+      await signIn(values);
+    } catch (err) {
+      console.log(err.response.data);
+    }
   };
-  console.log(formState.errors);
 
   return (
     <Flex w="100vw" h="100vh" align="center" justify="center">
