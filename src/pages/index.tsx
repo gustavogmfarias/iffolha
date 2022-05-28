@@ -12,7 +12,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RiLockPasswordFill } from "react-icons/ri";
 import { AiTwotoneMail } from "react-icons/ai";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { withSSRGuest } from "../../utils/withSSRGuest";
 import { Input } from "../components/Form/Input";
@@ -37,7 +37,7 @@ export default function Home() {
 
   const { signIn } = useContext(AuthContext);
 
-  let errorSignIn: string;
+  const [errorSignIn, setErrorSignIn] = useState("");
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -45,7 +45,7 @@ export default function Home() {
     try {
       await signIn(values);
     } catch (err) {
-      errorSignIn = err.response.data;
+      setErrorSignIn(err.response.data);
       console.log(errorSignIn);
     }
   };
@@ -102,8 +102,9 @@ export default function Home() {
               size="md"
               _hover={{ bgColor: "project.main_light" }}
             />
-            {!!errorSignIn && <ErrorFrame error={errorSignIn} />}
           </InputGroup>
+          <ErrorFrame error={errorSignIn}></ErrorFrame>
+
           <InputGroup>
             <InputLeftElement
               pointerEvents="none"
