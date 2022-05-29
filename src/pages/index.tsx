@@ -102,11 +102,12 @@ export default function Home() {
               size="md"
               _hover={{ bgColor: "project.main_light" }}
             />
+
+            {useEffect(() => {
+              console.log(errorSignIn);
+              !!errorSignIn && <ErrorFrame error={errorSignIn} />;
+            }, [errorSignIn])}
           </InputGroup>
-          {useEffect(() => {
-            console.log(errorSignIn);
-            !!errorSignIn && <ErrorFrame error={errorSignIn} />;
-          }, [errorSignIn])}
 
           <InputGroup>
             <InputLeftElement
