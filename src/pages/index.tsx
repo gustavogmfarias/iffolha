@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   Icon,
@@ -37,7 +38,7 @@ export default function Home() {
 
   const { signIn } = useContext(AuthContext);
 
-  const [errorSignIn, setErrorSignIn] = useState("");
+  const [errorSignIn, setErrorSignIn] = useState("a");
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -102,11 +103,6 @@ export default function Home() {
               size="md"
               _hover={{ bgColor: "project.main_light" }}
             />
-
-            {useEffect(() => {
-              console.log(errorSignIn);
-              !!errorSignIn && <ErrorFrame error={errorSignIn} />;
-            }, [errorSignIn])}
           </InputGroup>
 
           <InputGroup>
@@ -147,6 +143,10 @@ export default function Home() {
             />
           </InputGroup>
         </Stack>
+        {useEffect(() => {
+          console.log(errorSignIn);
+          !!errorSignIn && <ErrorFrame error={errorSignIn} />;
+        }, [errorSignIn])}
         <Flex w="100%" align="center" justify="center">
           <Button
             type="submit"
