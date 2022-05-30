@@ -143,10 +143,8 @@ export default function Home() {
             />
           </InputGroup>
         </Stack>
-        {useEffect(() => {
-          console.log(errorSignIn);
-          !!errorSignIn && <ErrorFrame error={errorSignIn} />;
-        }, [errorSignIn])}
+        {!!errorSignIn && <ErrorFrame error={errorSignIn} />}
+
         <Flex w="100%" align="center" justify="center">
           <Button
             type="submit"
