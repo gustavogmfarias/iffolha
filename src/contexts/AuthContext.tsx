@@ -56,39 +56,33 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   async function signIn({ email, password }: SignInCredentials) {
-    try {
-      const response = await api.post("sessions", { email, password });
+    const response = await api.post("sessions", { email, password });
 
-      const { token, refresh_token } = response.data;
+    const { token, refresh_token } = response.data;
 
-      setCookie(undefined, "nextauth.token", token, {
-        maxAge: 60 * 15, // 15 min
-        path: "/",
+    setCookie(undefined, "nextauth.token", token, {
+      maxAge: 60 * 15, // 15 min
+      path: "/",
+    });
+    setCookie(undefined, "nextauth.refreshToken", refresh_token, {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      path: "/",
+    });
+
+    api.defaults.headers["Authorization"] = `Bearer ${token}`;
+
+    api
+      .get("/users/profile")
+      .then((response) => {
+        const { avatar_url, email, id, name, role } = response.data;
+
+        setUser({ avatar_url, email, id, name, role });
+      })
+      .catch((error) => {
+        signOut();
       });
-      setCookie(undefined, "nextauth.refreshToken", refresh_token, {
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: "/",
-      });
 
-      api.defaults.headers["Authorization"] = `Bearer ${token}`;
-
-      api
-        .get("/users/profile")
-        .then((response) => {
-          const { avatar_url, email, id, name, role } = response.data;
-
-          setUser({ avatar_url, email, id, name, role });
-        })
-        .catch((error) => {
-          signOut();
-        });
-
-      console.log(response.data);
-
-      Router.push("/dashboard");
-    } catch (error) {
-      console.log(error.response.data.message);
-    }
+    Router.push("/dashboard");
   }
 
   return (

@@ -17,7 +17,7 @@ export function Sidebar() {
         <AvatarPerfil />
       </Box>
       <Box py="2">
-        <NavLink />
+        <NavLink name="SignOut" />
         <NavLink />
         <NavLink />
         <NavLink />

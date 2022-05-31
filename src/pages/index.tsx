@@ -38,7 +38,7 @@ export default function Home() {
 
   const { signIn } = useContext(AuthContext);
 
-  const [errorSignIn, setErrorSignIn] = useState("a");
+  const [errorSignIn, setErrorSignIn] = useState("");
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
     // await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -46,8 +46,7 @@ export default function Home() {
     try {
       await signIn(values);
     } catch (err) {
-      console.log(err.data.message);
-      setErrorSignIn(err.data.message);
+      setErrorSignIn(err.response.data.message);
     }
   };
 

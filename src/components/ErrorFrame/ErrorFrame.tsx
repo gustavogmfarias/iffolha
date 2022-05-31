@@ -6,8 +6,10 @@ interface IError {
 
 export function ErrorFrame({ error }: IError) {
   return (
-    <Flex>
-      <Text color="red">{error}</Text>
+    <Flex justify="center">
+      <Text pt="2" color="white">
+        {error}
+      </Text>
     </Flex>
   );
 }
