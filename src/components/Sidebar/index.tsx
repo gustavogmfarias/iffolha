@@ -17,8 +17,9 @@ export function Sidebar() {
         <AvatarPerfil />
       </Box>
       <Box py="2">
+        <NavLink name="Criar Usuário" link="/dashboard/createuser" />
         <NavLink name="SignOut" />
-        <NavLink />
+        <NavLink name="vincenzo" />
         <NavLink />
         <NavLink />
         <NavLink />

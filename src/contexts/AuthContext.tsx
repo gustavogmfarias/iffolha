@@ -4,7 +4,7 @@ import Router from "next/router";
 import { api } from "../../services/apiClient";
 
 type User = {
-  avatar_url?: string;
+  avatarUrl?: string;
   email?: string;
   id?: string;
   name?: string;
@@ -45,9 +45,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       api
         .get("/users/profile")
         .then((response) => {
-          const { avatar_url, email, id, name, role } = response.data;
+          const { avatarUrl, email, id, name, role } = response.data;
 
-          setUser({ avatar_url, email, id, name, role });
+          setUser({ avatarUrl, email, id, name, role });
         })
         .catch((error) => {
           signOut();
@@ -74,9 +74,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     api
       .get("/users/profile")
       .then((response) => {
-        const { avatar_url, email, id, name, role } = response.data;
+        const { avatarUrl, email, id, name, role } = response.data;
 
-        setUser({ avatar_url, email, id, name, role });
+        setUser({ avatarUrl, email, id, name, role });
       })
       .catch((error) => {
         signOut();
