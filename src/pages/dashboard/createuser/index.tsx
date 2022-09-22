@@ -11,10 +11,14 @@ import { AuthContext } from "../../../contexts/AuthContext";
 
 export default function CreateUser() {
   return (
-    <Flex w="100vw" h="100vh" justify="center" direction="row-reverse">
-      <FormFlex />
+    <Flex direction="column" h="100vh" maxWidth={1460} justify="flex-start">
       <Header />
-      <Sidebar />
+
+      <Flex w="100%" maxWidth={1460}>
+        <Sidebar />
+
+        <FormFlex />
+      </Flex>
     </Flex>
   );
 }
