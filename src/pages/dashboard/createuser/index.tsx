@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { useContext, useEffect } from "react";
 import { setupAPIClient } from "../../../../services/api";
 import { api } from "../../../../services/apiClient";
@@ -11,13 +11,15 @@ import { AuthContext } from "../../../contexts/AuthContext";
 
 export default function CreateUser() {
   return (
-    <Flex direction="column" h="100vh" maxWidth={1460} justify="flex-start">
-      <Header />
-
-      <Flex w="100%" maxWidth={1460}>
+    <Flex h="100vh" maxWidth={1460} align="flex-start">
+      <Flex w="80%" maxWidth={1460} mx="auto">
         <Sidebar />
-
-        <FormFlex />
+        <Header />
+        <SimpleGrid flex="1" gap="4" minChildWidth="320px" align="flex-start">
+          <Box p="8" bg="gray.800" borderRadius={8}>
+            <FormFlex />
+          </Box>
+        </SimpleGrid>
       </Flex>
     </Flex>
   );

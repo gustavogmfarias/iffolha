@@ -4,7 +4,7 @@ import { NavLink } from "./NavLink";
 
 export function Sidebar() {
   return (
-    <Box as="aside" w="15%" bg="white" shadow="lg" mx="auto">
+    <Box as="aside" w="15%" bg="white" shadow="lg">
       <Box>
         <AvatarPerfil />
 
