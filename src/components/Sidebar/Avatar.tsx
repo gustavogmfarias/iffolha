@@ -1,4 +1,4 @@
-import { Text, Stack } from "@chakra-ui/react";
+import { Text, Stack, Flex } from "@chakra-ui/react";
 import { Avatar } from "@chakra-ui/react";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -7,16 +7,17 @@ export function AvatarPerfil() {
   const { user } = useContext(AuthContext);
 
   return (
-    <Stack direction="row" align="center">
+    <Flex direction="row" alignItems="center" justify="center">
       <Avatar
         borderColor="project.text"
         borderWidth={2}
         size="md"
         name={user?.name}
         src={user?.avatarUrl}
+        mr="1"
       />
 
-      <Stack spacing="0.01">
+      <Stack spacing="0.01" align="center">
         <Text fontWeight="bold" color="project.text" fontSize="17" mb="-2">
           {user?.name}
         </Text>
@@ -24,6 +25,6 @@ export function AvatarPerfil() {
           {String(user?.role).toLowerCase()}
         </Text>
       </Stack>
-    </Stack>
+    </Flex>
   );
 }

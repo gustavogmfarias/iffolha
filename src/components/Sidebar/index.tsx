@@ -1,15 +1,27 @@
-import { Flex, Box } from "@chakra-ui/react";
-import { AvatarPerfil } from "./Avatar";
-import { NavLink } from "./NavLink";
+import { Flex, Box } from "@chakra-ui/react"
+import { AvatarPerfil } from "./Avatar"
+import { NavLink } from "./NavLink"
 
 export function Sidebar() {
   return (
-    <Box as="aside" w="15%" bg="white" shadow="lg">
-      <Box>
-        <AvatarPerfil />
+    <Flex
+      as="aside"
+      w="64"
+      mr="4"
+      direction="column"
+      py="8"
+      shadow="lg"
+      bg="whiteAlpha.500"
+    >
+      <AvatarPerfil />
 
-        <Box as="menu">
-          <NavLink name="Criar Usuário" link="/dashboard/createuser" />
+      <Flex as="aside" direction="column">
+        <Box as="menu" flex="1">
+          <NavLink
+            name="Usuários"
+            link="/dashboard/users"
+            iconName="RiUser3Line"
+          />
           <NavLink name="SignOut" />
           <NavLink name="Teste" />
           <NavLink />
@@ -17,7 +29,7 @@ export function Sidebar() {
           <NavLink />
           <NavLink />
         </Box>
-      </Box>
-    </Box>
-  );
+      </Flex>
+    </Flex>
+  )
 }
