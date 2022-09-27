@@ -1,19 +1,24 @@
-import { Box, Link, Text } from "@chakra-ui/react"
+import { Box, Link, LinkProps, Text } from "@chakra-ui/react";
 
-interface IRequest {
-  name: string
-  link: string
-  lastPage?: boolean
+interface IRequest extends LinkProps {
+  name: string;
+  link: string;
+  lastPage?: boolean;
 }
 
-export default function HistoricPage({ name, link, lastPage }: IRequest) {
+export default function HistoricPage({
+  name,
+  link,
+  lastPage = false,
+  ...rest
+}: IRequest) {
   return (
     <Box>
-      <Link href={link}>
+      <Link href={link} {...rest}>
         <Text fontSize="sm" mt="2">
           {name} {!lastPage && ">"}
         </Text>
       </Link>
     </Box>
-  )
+  );
 }

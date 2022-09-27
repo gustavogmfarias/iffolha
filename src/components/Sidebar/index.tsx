@@ -1,6 +1,7 @@
-import { Flex, Box } from "@chakra-ui/react"
-import { AvatarPerfil } from "./Avatar"
-import { NavLink } from "./NavLink"
+import { Flex, Box, Divider } from "@chakra-ui/react";
+import { RiUser3Line } from "react-icons/ri";
+import { AvatarPerfil } from "./Avatar";
+import { NavLink } from "./NavLink";
 
 export function Sidebar() {
   return (
@@ -20,8 +21,11 @@ export function Sidebar() {
           <NavLink
             name="Usuários"
             link="/dashboard/users"
-            iconName="RiUser3Line"
+            iconName={RiUser3Line}
           />
+
+          <Divider my="6" borderColor="gray.700" ml="-4" />
+
           <NavLink name="SignOut" />
           <NavLink name="Teste" />
           <NavLink />
@@ -31,5 +35,5 @@ export function Sidebar() {
         </Box>
       </Flex>
     </Flex>
-  )
+  );
 }

@@ -1,21 +1,21 @@
-import { Flex, Text, Icon, Link } from "@chakra-ui/react"
-import { RiUser3Line } from "react-icons/ri"
+import { Flex, Text, Icon, Link, LinkProps } from "@chakra-ui/react";
+import { ElementType } from "react";
 
-interface IRequest {
-  name?: string
-  link?: string
-  iconName?: string
+interface IRequest extends LinkProps {
+  name?: string;
+  link?: string;
+  iconName?: ElementType;
 }
 
-export function NavLink({ name, link, iconName }: IRequest) {
+export function NavLink({ name, link, iconName, ...rest }: IRequest) {
   return (
     <Flex w="40" flexDirection="row" align="center" fontWeight="bold" p="2">
-      <Icon as={RiUser3Line} fontSize="12" color="project.text" mr="5" />
-      <Link href={link}>
+      <Icon as={iconName} fontSize="12" color="project.text" mr="5" />
+      <Link href={link} {...rest}>
         <Text mr="10" fontSize="12" color="project.text">
           {name}
         </Text>
       </Link>
     </Flex>
-  )
+  );
 }

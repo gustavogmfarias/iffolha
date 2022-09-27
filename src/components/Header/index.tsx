@@ -11,6 +11,7 @@ export function Header() {
       justifyContent="center"
       align="center"
       maxWidth={1480}
+      minW="600"
       borderBottom="5px solid"
       borderColor="project.text"
       mx="auto"
