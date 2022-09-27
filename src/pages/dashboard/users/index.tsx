@@ -28,6 +28,7 @@ import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { Pagination } from "./Pagination/Index";
 import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
 
@@ -103,10 +104,38 @@ export default function CreateUser() {
                       role={"USER"}
                       createdAt={"04 de abril de 2021"}
                     />
+                    <TrowUser
+                      id={"111"}
+                      name={"Gustavo"}
+                      lastName={"Goulart"}
+                      avatarLink={"111"}
+                      email={"gustavo@gmail.com"}
+                      role={"USER"}
+                      createdAt={"04 de abril de 2021"}
+                    />
+                    <TrowUser
+                      id={"111"}
+                      name={"Gustavo"}
+                      lastName={"Goulart"}
+                      avatarLink={"111"}
+                      email={"gustavo@gmail.com"}
+                      role={"USER"}
+                      createdAt={"04 de abril de 2021"}
+                    />
+                    <TrowUser
+                      id={"111"}
+                      name={"Gustavo"}
+                      lastName={"Goulart"}
+                      avatarLink={"111"}
+                      email={"gustavo@gmail.com"}
+                      role={"USER"}
+                      createdAt={"04 de abril de 2021"}
+                    />
                   </Tbody>
                 </Table>
               </Box>
             </SimpleGrid>
+            <Pagination />
           </Stack>
         </Flex>
       </Flex>
