@@ -1,36 +1,37 @@
 import {
-  Avatar,
   Box,
   Button,
-  Checkbox,
   Flex,
   HStack,
   Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   SimpleGrid,
   Stack,
   Table,
   Tbody,
-  Td,
-  Text,
   Th,
   Thead,
   Tr,
-  VStack,
+  Text,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { useContext, useEffect } from "react";
 import { RiPencilLine } from "react-icons/ri";
 import { setupAPIClient } from "../../../../services/api";
-import { api } from "../../../../services/apiClient";
 import { withSSRAuth } from "../../../../utils/withSSRAuth";
-import { Input } from "../../../components/Form/Input";
-import { FormFlex } from "../../../components/FormFlex";
 import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
-import { AuthContext } from "../../../contexts/AuthContext";
 import { Pagination } from "./Pagination/Index";
 import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
+import Breadcrumbs from "nextjs-breadcrumbs";
+import Link from "next/link";
 
 export default function CreateUser() {
   return (
@@ -51,9 +52,9 @@ export default function CreateUser() {
             </HStack>
             <Flex mx="auto" p="8" justify="space-between" align="center">
               <SearchBox />
-
               <Button
                 as="a"
+                onClick={() => ModalUsuario()}
                 size="sm"
                 fontSize="sm"
                 colorScheme="green"
@@ -62,7 +63,6 @@ export default function CreateUser() {
                 Adicionar
               </Button>
             </Flex>
-
             <SimpleGrid
               flex="1"
               gap="2"
@@ -72,7 +72,7 @@ export default function CreateUser() {
               mx="auto"
             >
               <Box>
-                <Table colorScheme="whiteAlpha">
+                <Table colorScheme="green" variant="striped">
                   <Thead>
                     <Tr>
                       <Th w="8">Avatar</Th>
@@ -97,11 +97,11 @@ export default function CreateUser() {
                     />
                     <TrowUser
                       id={"111"}
-                      name={"Gustavo"}
+                      name={"Tiago"}
                       lastName={"Goulart"}
                       avatarLink={"111"}
                       email={"gustavo@gmail.com"}
-                      role={"USER"}
+                      role={"ADMIN"}
                       createdAt={"04 de abril de 2021"}
                     />
                     <TrowUser
@@ -140,6 +140,33 @@ export default function CreateUser() {
         </Flex>
       </Flex>
     </Flex>
+  );
+}
+
+function ModalUsuario() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay
+          bg="none"
+          backdropFilter="auto"
+          backdropInvert="80%"
+          backdropBlur="2px"
+        />
+        <ModalContent>
+          <ModalHeader>Criar usuário</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Custom backdrop filters!</Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Close</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
 

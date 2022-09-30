@@ -26,12 +26,8 @@ export function Sidebar() {
 
           <Divider my="6" borderColor="gray.700" ml="-4" />
 
-          <NavLink name="SignOut" />
-          <NavLink name="Teste" />
-          <NavLink />
-          <NavLink />
-          <NavLink />
-          <NavLink />
+          <NavLink name="SignOut" link="/dashboard/users" />
+          <NavLink name="Teste" link="/dashboard/users" />
         </Box>
       </Flex>
     </Flex>
