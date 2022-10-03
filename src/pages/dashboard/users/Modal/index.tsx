@@ -11,27 +11,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-export function ModalUsuario() {
-  const OverlayOne = () => (
-    <ModalOverlay
-      bg="blackAlpha.300"
-      backdropFilter="blur(10px) hue-rotate(90deg)"
-    />
-  );
-
-  const OverlayTwo = () => (
-    <ModalOverlay
-      bg="none"
-      backdropFilter="auto"
-      backdropInvert="80%"
-      backdropBlur="2px"
-    />
-  );
+export function CreateUserModal() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <OverlayTwo />
+        <ModalOverlay
+          bg="none"
+          backdropFilter="auto"
+          backdropInvert="80%"
+          backdropBlur="2px"
+        />
         <ModalContent>
           <ModalHeader>Criar usuário</ModalHeader>
           <ModalCloseButton />

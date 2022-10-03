@@ -4,13 +4,6 @@ import {
   Flex,
   HStack,
   Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   SimpleGrid,
   Stack,
   Table,
@@ -18,8 +11,6 @@ import {
   Th,
   Thead,
   Tr,
-  Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { RiPencilLine } from "react-icons/ri";
 import { setupAPIClient } from "../../../../services/api";
@@ -30,8 +21,7 @@ import { Sidebar } from "../../../components/Sidebar";
 import { Pagination } from "./Pagination/Index";
 import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
-import Breadcrumbs from "nextjs-breadcrumbs";
-import Link from "next/link";
+import { CreateUserModal, ModalUsuario } from "./Modal";
 
 export default function CreateUser() {
   return (
@@ -54,7 +44,7 @@ export default function CreateUser() {
               <SearchBox />
               <Button
                 as="a"
-                onClick={() => ModalUsuario()}
+                onClick={CreateUserModal.onOpen}
                 size="sm"
                 fontSize="sm"
                 colorScheme="green"
@@ -140,33 +130,6 @@ export default function CreateUser() {
         </Flex>
       </Flex>
     </Flex>
-  );
-}
-
-function ModalUsuario() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  return (
-    <>
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay
-          bg="none"
-          backdropFilter="auto"
-          backdropInvert="80%"
-          backdropBlur="2px"
-        />
-        <ModalContent>
-          <ModalHeader>Criar usuário</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>Custom backdrop filters!</Text>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
   );
 }
 
