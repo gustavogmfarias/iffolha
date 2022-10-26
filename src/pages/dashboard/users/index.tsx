@@ -40,6 +40,7 @@ export default function CreateUser() {
     String(page),
     (perPage = "10")
   );
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

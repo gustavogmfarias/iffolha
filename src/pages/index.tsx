@@ -46,6 +46,7 @@ export default function Home() {
     try {
       await signIn(values);
     } catch (err) {
+      console.log(err);
       setErrorSignIn(err.response.data.message);
     }
   };
