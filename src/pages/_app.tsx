@@ -3,6 +3,9 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "../styles/theme";
 import Head from "next/head";
 import { AuthProvider } from "../contexts/AuthContext";
+import { QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { queryClient } from "../../services/queryClient";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,11 +13,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title> IFFolha Itaperuna | www.iffolhaitap.com.br </title>
       </Head>
-      <AuthProvider>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-        </ChakraProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ReactQueryDevtools />
+          <ChakraProvider theme={theme}>
+            <Component {...pageProps} />
+          </ChakraProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </>
   );
 }

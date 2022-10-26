@@ -4,26 +4,44 @@ import {
   Flex,
   HStack,
   Icon,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   SimpleGrid,
   Stack,
   Table,
   Tbody,
   Th,
+  Text,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { RiPencilLine } from "react-icons/ri";
 import { setupAPIClient } from "../../../../services/api";
 import { withSSRAuth } from "../../../../utils/withSSRAuth";
 import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
+import { useUsers } from "./hooks/useUsers";
 import { Pagination } from "./Pagination/Index";
 import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
-import { CreateUserModal, ModalUsuario } from "./Modal";
 
 export default function CreateUser() {
+  let perPage: string;
+  const [page, setPage] = useState(1);
+  const { data, isLoading, isFetching, error } = useUsers(
+    String(page),
+    (perPage = "10")
+  );
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Flex direction="column" h="100vh" w="100vw" maxWidth={1480} mx="auto">
       <Header />
@@ -44,10 +62,11 @@ export default function CreateUser() {
               <SearchBox />
               <Button
                 as="a"
-                onClick={CreateUserModal.onOpen}
+                onClick={onOpen}
                 size="sm"
                 fontSize="sm"
                 colorScheme="green"
+                _hover={{ cursor: "pointer" }}
                 leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
               >
                 Adicionar
@@ -76,51 +95,20 @@ export default function CreateUser() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    <TrowUser
-                      id={"111"}
-                      name={"Gustavo"}
-                      lastName={"Goulart"}
-                      avatarLink={"111"}
-                      email={"gustavo@gmail.com"}
-                      role={"USER"}
-                      createdAt={"04 de abril de 2021"}
-                    />
-                    <TrowUser
-                      id={"111"}
-                      name={"Tiago"}
-                      lastName={"Goulart"}
-                      avatarLink={"111"}
-                      email={"gustavo@gmail.com"}
-                      role={"ADMIN"}
-                      createdAt={"04 de abril de 2021"}
-                    />
-                    <TrowUser
-                      id={"111"}
-                      name={"Gustavo"}
-                      lastName={"Goulart"}
-                      avatarLink={"111"}
-                      email={"gustavo@gmail.com"}
-                      role={"USER"}
-                      createdAt={"04 de abril de 2021"}
-                    />
-                    <TrowUser
-                      id={"111"}
-                      name={"Gustavo"}
-                      lastName={"Goulart"}
-                      avatarLink={"111"}
-                      email={"gustavo@gmail.com"}
-                      role={"USER"}
-                      createdAt={"04 de abril de 2021"}
-                    />
-                    <TrowUser
-                      id={"111"}
-                      name={"Gustavo"}
-                      lastName={"Goulart"}
-                      avatarLink={"111"}
-                      email={"gustavo@gmail.com"}
-                      role={"USER"}
-                      createdAt={"04 de abril de 2021"}
-                    />
+                    {data.users.map((user) => {
+                      return (
+                        <TrowUser
+                          key={user.id}
+                          id={user.id}
+                          name={user.name}
+                          lastName={user.lastName}
+                          avatarLink={user.avatarUrl}
+                          email={user.email}
+                          role={user.role}
+                          createdAt={"04 de abril de 2021"}
+                        />
+                      );
+                    })}
                   </Tbody>
                 </Table>
               </Box>
@@ -129,6 +117,26 @@ export default function CreateUser() {
           </Stack>
         </Flex>
       </Flex>
+
+      <Modal isCentered isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
+        <ModalContent>
+          <ModalHeader>Criar usuário</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack>
+              <Box></Box>
+              <Text>Custom backdrop filters!</Text>
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Close</Button>
+            <Button onClick={onClose} colorScheme="green">
+              Salvar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }

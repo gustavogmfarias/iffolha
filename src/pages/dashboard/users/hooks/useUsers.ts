@@ -1,0 +1,46 @@
+import { useQuery } from "react-query";
+import { api } from "../../../../../services/apiClient";
+
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  lastName: string;
+  avatarUrl: string;
+  role: string;
+};
+
+type GetUsersResponse = {
+  totalCount: number;
+  users: User[];
+};
+
+export async function getUsers(
+  page: string,
+  perPage: string
+): Promise<GetUsersResponse> {
+  const { data, headers } = await api.get("users", {
+    params: { page, perPage },
+  });
+
+  const totalCount = Number(headers["x-total-count"]);
+
+  const users = data.users.map((user: User) => {
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      lastName: user.lastName,
+      avatarUrl: user.avatarUrl,
+      role: user.role,
+    };
+  });
+
+  return { users, totalCount };
+}
+
+export function useUsers(page: string, perPage: string) {
+  return useQuery(["users", page], () => getUsers(page, perPage), {
+    staleTime: 1000 * 60 * 10,
+  });
+}
