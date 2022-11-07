@@ -1,0 +1,6 @@
+Como inicializar o front:
+git clone https://github.com/gustavogmfarias/iffolha/
+yarn
+yarn dev
+login dashboard: admin@amin.com
+senha: admin

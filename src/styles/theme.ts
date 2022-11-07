@@ -9,6 +9,7 @@ export const theme = extendTheme({
     project: {
       main: "#3B8C66",
       main_light: "#60BF81",
+      main_lighter: "#b1fccb",
       text: "#223240",
       text_light: "#347355",
       secondary: "#93D94E",

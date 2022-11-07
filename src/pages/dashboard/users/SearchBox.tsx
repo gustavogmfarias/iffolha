@@ -1,7 +1,12 @@
 import { Flex, HStack, Icon, Input } from "@chakra-ui/react";
 import { RiSearchLine } from "react-icons/ri";
 
-export function SearchBox() {
+interface SearchProps {
+  value: string;
+  onSearch: (content: string) => void;
+}
+
+export function SearchBox({ value, onSearch }: SearchProps) {
   return (
     <Flex
       as="label"
@@ -21,8 +26,10 @@ export function SearchBox() {
         variant="unstyled"
         px="4"
         mr="4"
+        value={value}
         placeholder="Digite um nome"
         _placeholder={{ color: "white" }}
+        onChange={() => onSearch(value)}
       ></Input>
 
       <Icon as={RiSearchLine} fontSize="20" />

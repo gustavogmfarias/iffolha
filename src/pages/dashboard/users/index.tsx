@@ -19,12 +19,15 @@ import {
   Text,
   Thead,
   Tr,
+  Select,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { RiPencilLine } from "react-icons/ri";
 import { setupAPIClient } from "../../../../services/api";
+import { api } from "../../../../services/apiClient";
 import { withSSRAuth } from "../../../../utils/withSSRAuth";
+import { InputInsideCreator } from "../../../components/Form/InputInsideCreators";
 import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
@@ -34,14 +37,24 @@ import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
 
 export default function CreateUser() {
-  let perPage: string;
+  let perPage: string = "10";
+  let name: string;
+
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const { data, isLoading, isFetching, error } = useUsers(
     String(page),
-    (perPage = "10")
+    perPage
   );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  async function handleSearch(name: string) {
+    const response = await api.get(`users`, {
+      params: { name: name },
+    });
+    return response.data;
+  }
 
   return (
     <Flex direction="column" h="100vh" w="100vw" maxWidth={1480} mx="auto">
@@ -60,7 +73,7 @@ export default function CreateUser() {
               />
             </HStack>
             <Flex mx="auto" p="8" justify="space-between" align="center">
-              <SearchBox />
+              <SearchBox value={search} onSearch={() => {}} />
               <Button
                 as="a"
                 onClick={onOpen}
@@ -96,7 +109,7 @@ export default function CreateUser() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data.users.map((user) => {
+                    {data?.users.map((user) => {
                       return (
                         <TrowUser
                           key={user.id}
@@ -125,10 +138,35 @@ export default function CreateUser() {
           <ModalHeader>Criar usuário</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Stack>
-              <Box></Box>
-              <Text>Custom backdrop filters!</Text>
-            </Stack>
+            <Box as="form">
+              <Stack>
+                <InputInsideCreator
+                  label="Nome:"
+                  name="name"
+                  type="text"
+                ></InputInsideCreator>
+                <InputInsideCreator
+                  label="E-mail:"
+                  name="email"
+                  type="email"
+                ></InputInsideCreator>
+                <InputInsideCreator
+                  label="Senha:"
+                  name="password"
+                  type="password"
+                ></InputInsideCreator>
+
+                <Select
+                  placeholder="Escolha um Papel"
+                  bgColor="project.main_lighter"
+                >
+                  <option value="option1">Admin</option>
+                  <option value="option2">User</option>
+                  <option value="option3">Editor</option>
+                  <option value="option3">Author</option>
+                </Select>
+              </Stack>
+            </Box>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
