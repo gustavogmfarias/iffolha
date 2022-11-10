@@ -9,6 +9,7 @@ type User = {
   lastName: string;
   avatarUrl: string;
   role: string;
+  createdAt: string;
 };
 
 type GetUsersResponse = {
@@ -34,17 +35,24 @@ export async function getUsers(
       email: user.email,
       lastName: user.lastName,
       avatarUrl: user.avatarUrl,
-      role: user.role,
+      role: String(user.role).toLowerCase(),
+      createdAt: new Date(user.createdAt).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
     };
   });
-
-  console.log(users);
 
   return { users, totalCount };
 }
 
 export function useUsers(page: string, perPage: string) {
-  return useQuery(["users", page], () => getUsers(page, perPage, name), {
-    staleTime: 1000 * 60 * 10,
-  });
+  return useQuery(
+    ["users", page, perPage],
+    () => getUsers(page, perPage, name),
+    {
+      staleTime: 1000 * 60 * 10,
+    }
+  );
 }

@@ -1,9 +1,19 @@
 import { Flex, Box, Divider } from "@chakra-ui/react";
+import { useContext } from "react";
 import { RiUser3Line } from "react-icons/ri";
+import { AuthContext } from "../../contexts/AuthContext";
 import { AvatarPerfil } from "./Avatar";
 import { NavLink } from "./NavLink";
 
 export function Sidebar() {
+  const { signOut } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    signOut();
+  };
+
   return (
     <Flex
       as="aside"
@@ -26,7 +36,7 @@ export function Sidebar() {
 
           <Divider my="6" borderColor="gray.700" ml="-4" />
 
-          <NavLink name="SignOut" link="/dashboard/users" />
+          <NavLink name="SignOut" onMouseClick={() => handleSignOut} />
           <NavLink name="Teste" link="/dashboard/users" />
         </Box>
       </Flex>

@@ -21,6 +21,7 @@ import {
   Tr,
   Select,
   useDisclosure,
+  Spinner,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { RiPencilLine } from "react-icons/ri";
@@ -74,6 +75,9 @@ export default function CreateUser() {
             </HStack>
             <Flex mx="auto" p="8" justify="space-between" align="center">
               <SearchBox value={search} onSearch={() => {}} />
+              {!isLoading && isFetching && (
+                <Spinner size="sm" color="gray.500" mr="auto" ml="4" />
+              )}
               <Button
                 as="a"
                 onClick={onOpen}
@@ -108,22 +112,32 @@ export default function CreateUser() {
                       <Th w="8"></Th>
                     </Tr>
                   </Thead>
-                  <Tbody>
-                    {data?.users.map((user) => {
-                      return (
-                        <TrowUser
-                          key={user.id}
-                          id={user.id}
-                          name={user.name}
-                          lastName={user.lastName}
-                          avatarLink={user.avatarUrl}
-                          email={user.email}
-                          role={user.role}
-                          createdAt={"04 de abril de 2021"}
-                        />
-                      );
-                    })}
-                  </Tbody>
+                  {isLoading ? (
+                    <Flex justify="center" align="center">
+                      <Spinner />
+                    </Flex>
+                  ) : error ? (
+                    <Flex justify="center" align="center">
+                      <Text>Falha ao obter os usuários</Text>
+                    </Flex>
+                  ) : (
+                    <Tbody>
+                      {data?.users.map((user) => {
+                        return (
+                          <TrowUser
+                            key={user.id}
+                            id={user.id}
+                            name={user.name}
+                            lastName={user.lastName}
+                            avatarLink={user.avatarUrl}
+                            email={user.email}
+                            role={user.role}
+                            createdAt={user.createdAt}
+                          />
+                        );
+                      })}
+                    </Tbody>
+                  )}
                 </Table>
               </Box>
             </SimpleGrid>
