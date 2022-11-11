@@ -36,7 +36,7 @@ export function Sidebar() {
 
           <Divider my="6" borderColor="gray.700" ml="-4" />
 
-          <NavLink name="SignOut" onMouseClick={() => handleSignOut} />
+          <NavLink name="SignOut" onMouseClick={() => handleSignOut()} />
           <NavLink name="Teste" link="/dashboard/users" />
         </Box>
       </Flex>

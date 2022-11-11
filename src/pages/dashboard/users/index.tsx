@@ -33,12 +33,12 @@ import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
 import { useUsers } from "./hooks/useUsers";
-import { Pagination } from "./Pagination/Index";
+import { Pagination } from "../../../components/Pagination/Index";
 import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
 
 export default function CreateUser() {
-  let perPage: string = "10";
+  let perPage: string = "1";
   let name: string;
 
   const [search, setSearch] = useState("");
@@ -141,7 +141,12 @@ export default function CreateUser() {
                 </Table>
               </Box>
             </SimpleGrid>
-            <Pagination />
+            <Pagination
+              totalCountOfRegisters={200}
+              currentPage={page}
+              onPageChange={setPage}
+              page={page}
+            />
           </Stack>
         </Flex>
       </Flex>
