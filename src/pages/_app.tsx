@@ -6,6 +6,7 @@ import { AuthProvider } from "../contexts/AuthContext";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { queryClient } from "../../services/queryClient";
+import { ModalPersistUserProvider } from "./dashboard/users/contexts/ModalPersistUserContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -17,7 +18,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <AuthProvider>
           <ReactQueryDevtools />
           <ChakraProvider theme={theme}>
-            <Component {...pageProps} />
+            <ModalPersistUserProvider>
+              <Component {...pageProps} />
+            </ModalPersistUserProvider>
           </ChakraProvider>
         </AuthProvider>
       </QueryClientProvider>

@@ -4,13 +4,6 @@ import {
   Flex,
   HStack,
   Icon,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   SimpleGrid,
   Stack,
   Table,
@@ -19,7 +12,6 @@ import {
   Text,
   Thead,
   Tr,
-  Select,
   useDisclosure,
   Spinner,
 } from "@chakra-ui/react";
@@ -28,14 +20,14 @@ import { RiPencilLine } from "react-icons/ri";
 import { setupAPIClient } from "../../../../services/api";
 import { api } from "../../../../services/apiClient";
 import { withSSRAuth } from "../../../../utils/withSSRAuth";
-import { InputInsideCreator } from "../../../components/Form/InputInsideCreators";
 import { Header } from "../../../components/Header";
 import HistoricPage from "../../../components/ListPage/HistoricPage";
 import { Sidebar } from "../../../components/Sidebar";
 import { useUsers } from "./hooks/useUsers";
 import { Pagination } from "../../../components/Pagination/Index";
-import { SearchBox } from "./SearchBox";
-import { TrowUser } from "./TrowUser";
+import { SearchBox } from "./components/SearchBox";
+import { TrowUser } from "./components/TrowUser";
+import PersistUserModal from "./components/PersistUserModal";
 
 export default function CreateUser() {
   let perPage: string = "10";
@@ -48,7 +40,7 @@ export default function CreateUser() {
     perPage
   );
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = ModalPersistUserContext();
 
   async function handleSearch(name: string) {
     const response = await api.get(`users`, {
@@ -150,51 +142,7 @@ export default function CreateUser() {
           </Stack>
         </Flex>
       </Flex>
-
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
-        <ModalContent>
-          <ModalHeader>Criar usuário</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Box as="form">
-              <Stack>
-                <InputInsideCreator
-                  label="Nome:"
-                  name="name"
-                  type="text"
-                ></InputInsideCreator>
-                <InputInsideCreator
-                  label="E-mail:"
-                  name="email"
-                  type="email"
-                ></InputInsideCreator>
-                <InputInsideCreator
-                  label="Senha:"
-                  name="password"
-                  type="password"
-                ></InputInsideCreator>
-
-                <Select
-                  placeholder="Escolha um Papel"
-                  bgColor="project.main_lighter"
-                >
-                  <option value="option1">Admin</option>
-                  <option value="option2">User</option>
-                  <option value="option3">Editor</option>
-                  <option value="option3">Author</option>
-                </Select>
-              </Stack>
-            </Box>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-            <Button onClick={onClose} colorScheme="green">
-              Salvar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <PersistUserModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
     </Flex>
   );
 }
@@ -204,3 +152,6 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   return { props: {} }; //caso não tenha o cookie, não é pra fazer nada
 });
+function ModalPersistUserContext(): { isOpen: any; onOpen: any; onClose: any } {
+  throw new Error("Function not implemented.");
+}
