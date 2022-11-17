@@ -38,7 +38,7 @@ import { SearchBox } from "./SearchBox";
 import { TrowUser } from "./TrowUser";
 
 export default function CreateUser() {
-  let perPage: string = "1";
+  let perPage: string = "10";
   let name: string;
 
   const [search, setSearch] = useState("");
@@ -99,28 +99,28 @@ export default function CreateUser() {
               mx="auto"
             >
               <Box>
-                <Table colorScheme="green" variant="striped">
-                  <Thead>
-                    <Tr>
-                      <Th w="8">Avatar</Th>
-                      <Th>Nome</Th>
-                      <Th>Sobrenome</Th>
-                      <Th>E-mail</Th>
-                      <Th>Role</Th>
-                      <Th>Criado em</Th>
-                      <Th w="8"></Th>
-                      <Th w="8"></Th>
-                    </Tr>
-                  </Thead>
-                  {isLoading ? (
-                    <Flex justify="center" align="center">
-                      <Spinner />
-                    </Flex>
-                  ) : error ? (
-                    <Flex justify="center" align="center">
-                      <Text>Falha ao obter os usuários</Text>
-                    </Flex>
-                  ) : (
+                {isLoading ? (
+                  <Flex justify="center" align="center">
+                    <Spinner />
+                  </Flex>
+                ) : error ? (
+                  <Flex justify="center" align="center">
+                    <Text>Falha ao obter os usuários</Text>
+                  </Flex>
+                ) : (
+                  <Table colorScheme="green" variant="striped">
+                    <Thead>
+                      <Tr>
+                        <Th w="8">Avatar</Th>
+                        <Th>Nome</Th>
+                        <Th>Sobrenome</Th>
+                        <Th>E-mail</Th>
+                        <Th>Role</Th>
+                        <Th>Criado em</Th>
+                        <Th w="8"></Th>
+                        <Th w="8"></Th>
+                      </Tr>
+                    </Thead>
                     <Tbody>
                       {data?.users.map((user) => {
                         return (
@@ -137,12 +137,12 @@ export default function CreateUser() {
                         );
                       })}
                     </Tbody>
-                  )}
-                </Table>
+                  </Table>
+                )}
               </Box>
             </SimpleGrid>
             <Pagination
-              totalCountOfRegisters={200}
+              totalCountOfRegisters={data?.totalCount}
               currentPage={page}
               onPageChange={setPage}
               page={page}
