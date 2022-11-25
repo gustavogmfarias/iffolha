@@ -28,6 +28,7 @@ import { Pagination } from "../../../components/Pagination/Index";
 import { SearchBox } from "./components/SearchBox";
 import { TrowUser } from "./components/TrowUser";
 import PersistUserModal from "./components/PersistUserModal";
+import { usePersistUserModal } from "./contexts/ModalPersistUserContext";
 
 export default function CreateUser() {
   let perPage: string = "10";
@@ -40,7 +41,7 @@ export default function CreateUser() {
     perPage
   );
 
-  const { isOpen, onOpen, onClose } = ModalPersistUserContext();
+  const { isOpen, onOpen, onClose } = usePersistUserModal();
 
   async function handleSearch(name: string) {
     const response = await api.get(`users`, {
@@ -152,6 +153,3 @@ export const getServerSideProps = withSSRAuth(async (ctx) => {
 
   return { props: {} }; //caso não tenha o cookie, não é pra fazer nada
 });
-function ModalPersistUserContext(): { isOpen: any; onOpen: any; onClose: any } {
-  throw new Error("Function not implemented.");
-}
