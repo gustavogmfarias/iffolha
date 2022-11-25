@@ -25,7 +25,6 @@ type ModalPersistUserProps = {
   isOpen: boolean;
   onClose: () => void;
   onOpen: () => void;
-  createUser: () => void;
 };
 
 type CreateUserFormData = {
