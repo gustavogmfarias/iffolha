@@ -74,6 +74,8 @@ export default function PersistUserModal({
   const { errors } = formState;
 
   const router = useRouter();
+  const [avatar, setAvatar] = useState("");
+  console.log("Image Files", avatar);
 
   const createUser = useMutation(
     async ({ name, lastName, email, password, role }: CreateUserFormData) => {
@@ -100,9 +102,6 @@ export default function PersistUserModal({
       },
     }
   );
-
-  const [avatar, setAvatar] = useState("");
-  console.log("Image Files", avatar);
 
   const handleInputAvatar = (e) => {
     if (e.target.files.length !== 0) {
@@ -181,7 +180,7 @@ export default function PersistUserModal({
                 bgColor="project.main_lighter"
               >
                 <option value="ADMIN">Admin</option>
-                <option value="USER">USER</option>
+                <option value="USER">User</option>
                 <option value="EDITOR">Editor</option>
                 <option value="AUTHOR">Author</option>
               </Select>
