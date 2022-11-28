@@ -50,12 +50,16 @@ export function Pagination({
     >
       {page === 1 ? (
         <Box>
-          <strong>1</strong> - <strong>{registerPerPage}</strong> de{" "}
-          <strong>{totalCountOfRegisters}</strong>{" "}
+          <strong>1</strong> -{" "}
+          <strong>
+            {registerPerPage < totalCountOfRegisters
+              ? registerPerPage
+              : totalCountOfRegisters}
+          </strong>{" "}
+          de <strong>{totalCountOfRegisters}</strong>{" "}
         </Box>
       ) : (
         <Box>
-          {" "}
           <strong>{currentPage * registerPerPage - 9}</strong> -{" "}
           <strong>{(currentPage % registerPerPage) * registerPerPage}</strong>{" "}
           de <strong>{totalCountOfRegisters}</strong>{" "}

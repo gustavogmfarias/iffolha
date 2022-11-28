@@ -10,6 +10,10 @@ import {
   ModalOverlay,
   Stack,
   Select,
+  Avatar,
+  Flex,
+  Input,
+  Text,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -20,6 +24,7 @@ import router, { useRouter } from "next/router";
 
 import { InputInsideCreator } from "../../../../components/Form/InputInsideCreators";
 import { api } from "../../../../../services/apiClient";
+import { useState } from "react";
 
 type ModalPersistUserProps = {
   isOpen: boolean;
@@ -59,6 +64,10 @@ export default function PersistUserModal({
   onClose,
   onOpen,
 }: ModalPersistUserProps) {
+  const [serverSideError, setServerSideError] = useState(
+    "erro tem que aparecer aqui"
+  );
+
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(createUserFormSchema),
   });
@@ -83,8 +92,23 @@ export default function PersistUserModal({
         queryClient.invalidateQueries("users");
         onClose();
       },
+    },
+    {
+      onError: (err) => {
+        setServerSideError(err.message);
+        console.log(err.message);
+      },
     }
   );
+
+  const [avatar, setAvatar] = useState("");
+  console.log("Image Files", avatar);
+
+  const handleInputAvatar = (e) => {
+    if (e.target.files.length !== 0) {
+      setAvatar(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
   const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
     values
@@ -95,13 +119,24 @@ export default function PersistUserModal({
   };
 
   return (
-    <Modal isCentered onOpen={onOpen} isOpen={isOpen} onClose={onClose}>
+    <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <ModalContent>
         <ModalHeader>Criar usuário</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Box as="form" onSubmit={handleSubmit(handleCreateUser)}>
+            <Flex justify="center" mb="2" dir="column">
+              <Avatar size="lg" src={avatar} />
+              <Input
+                type="file"
+                id="avatar"
+                name="avatar"
+                accept=".jpg, .jpeg, .png"
+                onChange={handleInputAvatar}
+              />
+            </Flex>
+
             <Stack>
               <InputInsideCreator
                 label="Nome:"
@@ -146,7 +181,7 @@ export default function PersistUserModal({
                 bgColor="project.main_lighter"
               >
                 <option value="ADMIN">Admin</option>
-                <option value="USER"></option>
+                <option value="USER">USER</option>
                 <option value="EDITOR">Editor</option>
                 <option value="AUTHOR">Author</option>
               </Select>
@@ -158,6 +193,8 @@ export default function PersistUserModal({
               >
                 Salvar
               </Button>
+
+              <Text>{serverSideError}</Text>
             </Stack>
           </Box>
         </ModalBody>
