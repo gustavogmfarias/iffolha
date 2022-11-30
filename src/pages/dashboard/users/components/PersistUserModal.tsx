@@ -126,15 +126,15 @@ export default function PersistUserModal({
 
   let userAvatar;
 
-  console.log(1);
   useEffect(() => {
     const formData = new FormData();
-    console.log(2);
 
     formData.append("avatar", avatar);
-    async () => {
-      if (createUser.isSuccess) {
-        console.log(3);
+    console.log(formData);
+    if (createUser.isSuccess) {
+      console.log(1);
+      async () => {
+        console.log(2);
 
         userAvatar = await api.patch(
           `/users/avatar/${userCreated.id}`,
@@ -145,10 +145,9 @@ export default function PersistUserModal({
             },
           }
         );
-
         console.log(userAvatar, "useravatar");
-      }
-    };
+      };
+    }
   }, [createUser.isSuccess]);
 
   return (
