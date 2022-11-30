@@ -1,0 +1,6 @@
+[] colocar delete na lista
+[] fazer editar
+[] fazer erro do role aparecer quando cria
+[] fazer aparecer mensagem quando deletar, criar, editar, confirmando
+[] fazer import de imagem
+[] fazer erro do lado do servidor aparecer: #esperando resposta do suporte
