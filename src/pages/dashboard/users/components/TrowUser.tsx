@@ -1,5 +1,8 @@
 import { Avatar, Button, Icon, Td, Text, Tr } from "@chakra-ui/react";
 import { RiPencilLine } from "react-icons/ri";
+import { useMutation } from "react-query";
+import { api } from "../../../../../services/apiClient";
+import { queryClient } from "../../../../../services/queryClient";
 
 interface TrowUserProps {
   id: string;
@@ -20,6 +23,26 @@ export function TrowUser({
   role,
   createdAt,
 }: TrowUserProps) {
+  const deleteUser = useMutation(
+    async (userId: string) => {
+      const response = await api.delete(`users/${userId}`);
+      return response.message;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("users");
+      },
+    },
+    {
+      onError: (err) => {},
+    }
+  );
+
+  const handleDeleteUser = async (userId) => {
+    const userDeleted = await deleteUser.mutateAsync(userId);
+    console.log(userDeleted);
+  };
+
   return (
     <Tr>
       <Td>
@@ -59,6 +82,7 @@ export function TrowUser({
           fontSize="sm"
           colorScheme="green"
           leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+          onClick={() => handleDeleteUser(id)}
         >
           Deletar
         </Button>

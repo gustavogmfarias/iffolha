@@ -1,7 +1,18 @@
-[] colocar delete na lista
-[] fazer editar
-[] fazer erro do role aparecer quando cria
-[] fazer aparecer mensagem quando deletar, criar, editar, confirmando
+#SUPORTE
+
 [] fazer import de imagem: #esperando resposta do suporte
 [] fazer erro do lado do servidor aparecer: #esperando resposta do suporte
+
+
+#A FAZER
+
+[] fazer editar
+[] fazer aparecer mensagem quando deletar, criar, editar, confirmando
 [] fazer busca funcionar
+[] corrigir erro de irrigação
+[] criar prefetch para editar
+
+#PRONTOS
+[x] colocar delete na lista
+[x] fazer erro do role aparecer quando cria
+

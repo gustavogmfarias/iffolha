@@ -29,6 +29,8 @@ import { SearchBox } from "./components/SearchBox";
 import { TrowUser } from "./components/TrowUser";
 import PersistUserModal from "./components/PersistUserModal";
 import { usePersistUserModal } from "./contexts/ModalPersistUserContext";
+import { useMutation } from "react-query";
+import { queryClient } from "../../../../services/queryClient";
 
 export default function CreateUser() {
   let perPage: string = "10";

@@ -49,7 +49,7 @@ const createUserFormSchema = yup.object().shape({
   role: yup
     .mixed()
     .required("Role é obrigatório")
-    .oneOf(["ADMIN", "USER", "EDITOR", "AUTHOR"]),
+    .oneOf(["ADMIN", "USER", "EDITOR", "AUTHOR"], "Role é obrigatório"),
   email: yup
     .string()
     .required("E-mail é obrigatório")
@@ -60,6 +60,7 @@ const createUserFormSchema = yup.object().shape({
     .min(6, "A senha precisa ter no mínimo 6 caracteres"),
   passwordConfirmation: yup
     .string()
+    .required("Confirmação de Senha é obrigatório")
     .oneOf([null, yup.ref("password")], "As senhas precisam ser iguais"),
 });
 
@@ -120,17 +121,21 @@ export default function PersistUserModal({
     values
   ) => {
     userCreated = await createUser.mutateAsync(values);
-    console.log(userCreated);
+    console.log(userCreated, "usercreated");
   };
 
   let userAvatar;
 
+  console.log(1);
   useEffect(() => {
     const formData = new FormData();
-    const imageFile = document.querySelector("#avatar");
-    formData.append("avatar", imageFile.files[0]);
+    console.log(2);
+
+    formData.append("avatar", avatar);
     async () => {
       if (createUser.isSuccess) {
+        console.log(3);
+
         userAvatar = await api.patch(
           `/users/avatar/${userCreated.id}`,
           formData,
@@ -141,7 +146,7 @@ export default function PersistUserModal({
           }
         );
 
-        console.log(userAvatar);
+        console.log(userAvatar, "useravatar");
       }
     };
   }, [createUser.isSuccess]);
