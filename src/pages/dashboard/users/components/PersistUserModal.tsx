@@ -24,7 +24,8 @@ import router, { useRouter } from "next/router";
 
 import { InputInsideCreator } from "../../../../components/Form/InputInsideCreators";
 import { api } from "../../../../../services/apiClient";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SelectInsideCreators } from "../../../../components/Form/SelectInsideCreators";
 
 type ModalPersistUserProps = {
   isOpen: boolean;
@@ -78,7 +79,9 @@ export default function PersistUserModal({
 
   const router = useRouter();
   const [avatar, setAvatar] = useState("");
-  console.log("Image Files", avatar);
+  const [avatarUpload, setAvatarUpload] = useState("");
+
+  let userCreated;
 
   const createUser = useMutation(
     async ({ name, lastName, email, password, role }: CreateUserFormData) => {
@@ -89,8 +92,8 @@ export default function PersistUserModal({
         password,
         role,
       });
-
-      return response.data.user;
+      // useCreated = response.data[0];
+      return response.data[0];
     },
     {
       onSuccess: () => {
@@ -109,14 +112,39 @@ export default function PersistUserModal({
   const handleInputAvatar = (e) => {
     if (e.target.files.length !== 0) {
       setAvatar(URL.createObjectURL(e.target.files[0]));
+      setAvatarUpload(e.target.files[0]);
     }
   };
 
   const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
     values
   ) => {
-    await createUser.mutateAsync(values);
+    userCreated = await createUser.mutateAsync(values);
+    console.log(userCreated);
   };
+
+  let userAvatar;
+
+  useEffect(() => {
+    const formData = new FormData();
+    const imageFile = document.querySelector("#avatar");
+    formData.append("avatar", imageFile.files[0]);
+    async () => {
+      if (createUser.isSuccess) {
+        userAvatar = await api.patch(
+          `/users/avatar/${userCreated.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log(userAvatar);
+      }
+    };
+  }, [createUser.isSuccess]);
 
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
@@ -174,17 +202,17 @@ export default function PersistUserModal({
                 {...register("passwordConfirmation")}
               ></InputInsideCreator>
 
-              <Select
+              <SelectInsideCreators
                 error={errors.role}
                 {...register("role")}
+                name="role"
                 placeholder="Escolha um Papel"
-                bgColor="project.main_lighter"
               >
                 <option value="ADMIN">Admin</option>
                 <option value="USER">User</option>
                 <option value="EDITOR">Editor</option>
                 <option value="AUTHOR">Author</option>
-              </Select>
+              </SelectInsideCreators>
 
               <Button
                 type="submit"
