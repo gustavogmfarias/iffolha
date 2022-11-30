@@ -45,7 +45,10 @@ type CreateUserFormData = {
 const createUserFormSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
   lastName: yup.string().required("Sobrenome é obrigatório"),
-  role: yup.string().required("Role é obrigatório"),
+  role: yup
+    .mixed()
+    .required("Role é obrigatório")
+    .oneOf(["ADMIN", "USER", "EDITOR", "AUTHOR"]),
   email: yup
     .string()
     .required("E-mail é obrigatório")
@@ -97,8 +100,8 @@ export default function PersistUserModal({
     },
     {
       onError: (err) => {
-        setServerSideError(err.message);
-        console.log(err.message);
+        setServerSideError(err);
+        console.log(err.response.data.message);
       },
     }
   );
@@ -112,8 +115,6 @@ export default function PersistUserModal({
   const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
     values
   ) => {
-    console.log(values);
-
     await createUser.mutateAsync(values);
   };
 
