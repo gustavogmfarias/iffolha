@@ -1,7 +1,6 @@
 #SUPORTE
 
 [] fazer import de imagem: #esperando resposta do suporte
-[] fazer erro do lado do servidor aparecer: #esperando resposta do suporte
 
 
 #A FAZER
