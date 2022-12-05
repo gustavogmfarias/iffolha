@@ -6,7 +6,7 @@
 #A FAZER
 
 [] fazer editar
-[] fazer aparecer mensagem quando deletar, criar, editar, confirmando
+[] fazer aparecer mensagem quando editar, confirmando
 [] fazer busca funcionar
 [] corrigir erro de irrigação
 [] criar prefetch para editar

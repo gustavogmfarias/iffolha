@@ -43,7 +43,7 @@ export default function CreateUser() {
     perPage
   );
 
-  const { isOpen, onOpen, onClose } = usePersistUserModal();
+  const { isOpen, onOpen, onClose, status } = usePersistUserModal();
 
   async function handleSearch(name: string) {
     const response = await api.get(`users`, {
@@ -72,6 +72,16 @@ export default function CreateUser() {
               <SearchBox value={search} onSearch={() => {}} />
               {!isLoading && isFetching && (
                 <Spinner size="sm" color="gray.500" mr="auto" ml="4" />
+              )}
+              {!!status && (
+                <Flex
+                  bg="green.600"
+                  color="white"
+                  fontWeight="bold"
+                  borderRadius="6"
+                >
+                  <Text>{status}</Text>
+                </Flex>
               )}
               <Button
                 as="a"

@@ -26,6 +26,7 @@ import { InputInsideCreator } from "../../../../components/Form/InputInsideCreat
 import { api } from "../../../../../services/apiClient";
 import { useEffect, useState } from "react";
 import { SelectInsideCreators } from "../../../../components/Form/SelectInsideCreators";
+import { usePersistUserModal } from "../contexts/ModalPersistUserContext";
 
 type ModalPersistUserProps = {
   isOpen: boolean;
@@ -71,6 +72,8 @@ export default function PersistUserModal({
   onClose,
   onOpen,
 }: ModalPersistUserProps) {
+  const { status, setStatus } = usePersistUserModal();
+
   const [serverSideError, setServerSideError] = useState("");
 
   const { register, handleSubmit, formState, reset } = useForm({
@@ -97,8 +100,12 @@ export default function PersistUserModal({
     {
       onSuccess: () => {
         queryClient.invalidateQueries("users");
-        reset();
         onClose();
+        reset();
+        setStatus("Usuário criado com sucesso");
+        setTimeout(() => {
+          setStatus("");
+        }, 5000);
       },
     },
     {
@@ -123,6 +130,11 @@ export default function PersistUserModal({
       setServerSideError("");
     } catch (err) {
       setServerSideError(err.response.data.message);
+      {
+        setTimeout(() => {
+          setServerSideError("");
+        }, 5000);
+      }
     }
   };
 
@@ -134,13 +146,19 @@ export default function PersistUserModal({
     formData.append("avatar", avatar);
     console.log(formData, "1");
     if (createUser.isSuccess) {
-      userAvatar = api.patch(`/users/avatar/${userCreated.id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(userAvatar, "useravatar");
-      console.log(3);
+      async () => {
+        userAvatar = await api.patch(
+          `/users/avatar/${userCreated.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(userAvatar, "useravatar");
+        console.log(3);
+      };
     }
   }, [createUser.isSuccess]);
 
@@ -219,8 +237,16 @@ export default function PersistUserModal({
               >
                 Salvar
               </Button>
-
-              <Text>{serverSideError}</Text>
+              <Flex
+                alignItems="center"
+                justify="center"
+                bg="red.600"
+                color="white"
+                fontWeight="bold"
+                borderRadius="6"
+              >
+                <Text>{serverSideError}</Text>
+              </Flex>
             </Stack>
           </Box>
         </ModalBody>

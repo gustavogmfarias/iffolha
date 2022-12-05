@@ -3,6 +3,7 @@ import { RiPencilLine } from "react-icons/ri";
 import { useMutation } from "react-query";
 import { api } from "../../../../../services/apiClient";
 import { queryClient } from "../../../../../services/queryClient";
+import { usePersistUserModal } from "../contexts/ModalPersistUserContext";
 
 interface TrowUserProps {
   id: string;
@@ -23,6 +24,8 @@ export function TrowUser({
   role,
   createdAt,
 }: TrowUserProps) {
+  const { status, setStatus } = usePersistUserModal();
+
   const deleteUser = useMutation(
     async (userId: string) => {
       const response = await api.delete(`users/${userId}`);
@@ -31,6 +34,10 @@ export function TrowUser({
     {
       onSuccess: () => {
         queryClient.invalidateQueries("users");
+        setStatus("Usuário deletado com sucesso");
+        setTimeout(() => {
+          setStatus("");
+        }, 5000);
       },
     },
     {
