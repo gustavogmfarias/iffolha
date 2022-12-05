@@ -48,7 +48,7 @@ const createUserFormSchema = yup.object().shape({
   lastName: yup.string().required("Sobrenome é obrigatório"),
   role: yup
     .mixed()
-    .required("Role é obrigatório")
+    .required("Papel é obrigatório")
     .oneOf(["ADMIN", "USER", "EDITOR", "AUTHOR"], "Role é obrigatório"),
   email: yup
     .string()
@@ -71,11 +71,9 @@ export default function PersistUserModal({
   onClose,
   onOpen,
 }: ModalPersistUserProps) {
-  const [serverSideError, setServerSideError] = useState(
-    "erro tem que aparecer aqui"
-  );
+  const [serverSideError, setServerSideError] = useState("");
 
-  const { register, handleSubmit, formState } = useForm({
+  const { register, handleSubmit, formState, reset } = useForm({
     resolver: yupResolver(createUserFormSchema),
   });
   const { errors } = formState;
@@ -99,13 +97,13 @@ export default function PersistUserModal({
     {
       onSuccess: () => {
         queryClient.invalidateQueries("users");
+        reset();
         onClose();
       },
     },
     {
       onError: (err) => {
-        setServerSideError(err);
-        console.log(err.response.data.message);
+        return err;
       },
     }
   );
@@ -120,8 +118,12 @@ export default function PersistUserModal({
   const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
     values
   ) => {
-    userCreated = await createUser.mutateAsync(values);
-    console.log(userCreated, "usercreated");
+    try {
+      userCreated = await createUser.mutateAsync(values);
+      setServerSideError("");
+    } catch (err) {
+      setServerSideError(err.response.data.message);
+    }
   };
 
   let userAvatar;
