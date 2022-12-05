@@ -64,6 +64,8 @@ const createUserFormSchema = yup.object().shape({
     .oneOf([null, yup.ref("password")], "As senhas precisam ser iguais"),
 });
 
+let userCreated, avatar, userAvatar;
+
 export default function PersistUserModal({
   isOpen,
   onClose,
@@ -81,8 +83,6 @@ export default function PersistUserModal({
   const router = useRouter();
   const [avatar, setAvatar] = useState("");
   const [avatarUpload, setAvatarUpload] = useState("");
-
-  let userCreated;
 
   const createUser = useMutation(
     async ({ name, lastName, email, password, role }: CreateUserFormData) => {
@@ -130,23 +130,15 @@ export default function PersistUserModal({
     const formData = new FormData();
 
     formData.append("avatar", avatar);
-    console.log(formData);
+    console.log(formData, "1");
     if (createUser.isSuccess) {
-      console.log(1);
-      async () => {
-        console.log(2);
-
-        userAvatar = await api.patch(
-          `/users/avatar/${userCreated.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(userAvatar, "useravatar");
-      };
+      userAvatar = api.patch(`/users/avatar/${userCreated.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(userAvatar, "useravatar");
+      console.log(3);
     }
   }, [createUser.isSuccess]);
 
