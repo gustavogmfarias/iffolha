@@ -14,6 +14,7 @@ import {
   Tr,
   useDisclosure,
   Spinner,
+  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { RiPencilLine } from "react-icons/ri";
@@ -50,6 +51,18 @@ export default function CreateUser() {
       params: { name: name },
     });
     return response.data;
+  }
+
+  async function handlePrefetchUser(userId: string) {
+    await queryClient.prefetchQuery(
+      ["user", userId],
+      async () => {
+        const response = await api.get(`users/findbyid?id=${userId}`);
+        return response.data;
+        console.log(response);
+      },
+      { staleTime: 1000 * 60 * 10 }
+    ); //10 minutos
   }
 
   return (
@@ -130,6 +143,9 @@ export default function CreateUser() {
                       {data?.users.map((user) => {
                         return (
                           <TrowUser
+                            prefetchUser={() =>
+                              handlePrefetchUser(String(user.id))
+                            }
                             key={user.id}
                             id={user.id}
                             name={user.name}

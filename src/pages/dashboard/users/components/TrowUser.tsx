@@ -12,6 +12,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
+  Link,
 } from "@chakra-ui/react";
 import { RiPencilLine } from "react-icons/ri";
 import { useMutation } from "react-query";
@@ -28,6 +29,7 @@ interface TrowUserProps {
   email: string;
   role: string;
   createdAt: string;
+  prefetchUser: (userId: string) => void;
 }
 
 export function TrowUser({
@@ -38,6 +40,7 @@ export function TrowUser({
   email,
   role,
   createdAt,
+  prefetchUser,
 }: TrowUserProps) {
   const { status, setStatus } = usePersistUserModal();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -81,34 +84,48 @@ export function TrowUser({
           <Avatar size="sm" name={name + " " + lastName} src={avatarLink} />
         </Td>
         <Td>
-          <Text>{name}</Text>
+          <Link onMouseEnter={prefetchUser}>
+            <Text>{name}</Text>
+          </Link>
         </Td>
         <Td>
-          <Text>{lastName}</Text>
+          <Link onMouseEnter={prefetchUser}>
+            <Text>{lastName}</Text>
+          </Link>
         </Td>
         <Td>
-          <Text>{email}</Text>
+          <Link onMouseEnter={prefetchUser}>
+            <Text>{email}</Text>
+          </Link>
         </Td>
         <Td>
-          <Text>{role}</Text>
+          <Link onMouseEnter={prefetchUser}>
+            <Text>{role}</Text>
+          </Link>
         </Td>
 
         <Td>
-          <Text>{createdAt}</Text>
+          <Link onMouseEnter={prefetchUser}>
+            <Text>{createdAt}</Text>
+          </Link>
+        </Td>
+        <Td>
+          <Link onMouseEnter={prefetchUser}>
+            <Button
+              cursor="pointer"
+              as="a"
+              size="sm"
+              fontSize="sm"
+              colorScheme="green"
+              leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+            >
+              Editar
+            </Button>
+          </Link>
         </Td>
         <Td>
           <Button
-            as="a"
-            size="sm"
-            fontSize="sm"
-            colorScheme="green"
-            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-          >
-            Editar
-          </Button>
-        </Td>
-        <Td>
-          <Button
+            cursor="pointer"
             as="a"
             size="sm"
             fontSize="sm"
@@ -129,7 +146,7 @@ export function TrowUser({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Delete Customer
+              Delete Usuário
             </AlertDialogHeader>
 
             <AlertDialogBody>Você tem certeza?</AlertDialogBody>
