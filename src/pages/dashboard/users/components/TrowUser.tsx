@@ -1,9 +1,24 @@
-import { Avatar, Button, Icon, Td, Text, Tr } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Icon,
+  Td,
+  Text,
+  Tr,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { RiPencilLine } from "react-icons/ri";
 import { useMutation } from "react-query";
 import { api } from "../../../../../services/apiClient";
 import { queryClient } from "../../../../../services/queryClient";
 import { usePersistUserModal } from "../contexts/ModalPersistUserContext";
+import { useRef } from "react";
 
 interface TrowUserProps {
   id: string;
@@ -25,6 +40,8 @@ export function TrowUser({
   createdAt,
 }: TrowUserProps) {
   const { status, setStatus } = usePersistUserModal();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
 
   const deleteUser = useMutation(
     async (userId: string) => {
@@ -46,7 +63,14 @@ export function TrowUser({
   );
 
   const handleDeleteUser = async (userId) => {
-    const userDeleted = await deleteUser.mutateAsync(userId);
+    let userDeleted;
+    try {
+      userDeleted = await deleteUser.mutateAsync(userId);
+      onClose();
+    } catch (err) {
+      return err;
+    }
+
     console.log(userDeleted);
   };
 
@@ -89,11 +113,36 @@ export function TrowUser({
           fontSize="sm"
           colorScheme="green"
           leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-          onClick={() => handleDeleteUser(id)}
+          onClick={onOpen}
         >
           Deletar
         </Button>
       </Td>
     </Tr>
   );
+
+  <AlertDialog
+    isOpen={isOpen}
+    leastDestructiveRef={cancelRef}
+    onClose={onClose}
+  >
+    <AlertDialogOverlay>
+      <AlertDialogContent>
+        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+          Delete Customer
+        </AlertDialogHeader>
+
+        <AlertDialogBody>Você tem certeza? </AlertDialogBody>
+
+        <AlertDialogFooter>
+          <Button ref={cancelRef} onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button colorScheme="red" onClick={() => handleDeleteUser(id)} ml={3}>
+            Delete
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialogOverlay>
+  </AlertDialog>;
 }

@@ -145,21 +145,26 @@ export default function PersistUserModal({
 
     formData.append("avatar", avatar);
     console.log(formData, "1");
-    if (createUser.isSuccess) {
-      async () => {
-        userAvatar = await api.patch(
-          `/users/avatar/${userCreated.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(userAvatar, "useravatar");
-        console.log(3);
-      };
+
+    async function uploadImage() {
+      if (createUser.isSuccess) {
+        async () => {
+          userAvatar = await api.patch(
+            `/users/avatar/${userCreated.id}`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log(userAvatar, "useravatar");
+          console.log(3);
+        };
+      }
     }
+
+    uploadImage();
   }, [createUser.isSuccess]);
 
   return (
