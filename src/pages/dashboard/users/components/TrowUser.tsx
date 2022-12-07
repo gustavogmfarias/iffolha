@@ -75,74 +75,80 @@ export function TrowUser({
   };
 
   return (
-    <Tr>
-      <Td>
-        <Avatar size="sm" name={name + " " + lastName} src={avatarLink} />
-      </Td>
-      <Td>
-        <Text>{name}</Text>
-      </Td>
-      <Td>
-        <Text>{lastName}</Text>
-      </Td>
-      <Td>
-        <Text>{email}</Text>
-      </Td>
-      <Td>
-        <Text>{role}</Text>
-      </Td>
+    <>
+      <Tr>
+        <Td>
+          <Avatar size="sm" name={name + " " + lastName} src={avatarLink} />
+        </Td>
+        <Td>
+          <Text>{name}</Text>
+        </Td>
+        <Td>
+          <Text>{lastName}</Text>
+        </Td>
+        <Td>
+          <Text>{email}</Text>
+        </Td>
+        <Td>
+          <Text>{role}</Text>
+        </Td>
 
-      <Td>
-        <Text>{createdAt}</Text>
-      </Td>
-      <Td>
-        <Button
-          as="a"
-          size="sm"
-          fontSize="sm"
-          colorScheme="green"
-          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-        >
-          Editar
-        </Button>
-      </Td>
-      <Td>
-        <Button
-          as="a"
-          size="sm"
-          fontSize="sm"
-          colorScheme="green"
-          leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
-          onClick={onOpen}
-        >
-          Deletar
-        </Button>
-      </Td>
-    </Tr>
+        <Td>
+          <Text>{createdAt}</Text>
+        </Td>
+        <Td>
+          <Button
+            as="a"
+            size="sm"
+            fontSize="sm"
+            colorScheme="green"
+            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+          >
+            Editar
+          </Button>
+        </Td>
+        <Td>
+          <Button
+            as="a"
+            size="sm"
+            fontSize="sm"
+            colorScheme="green"
+            leftIcon={<Icon as={RiPencilLine} fontSize="16" />}
+            onClick={onOpen}
+          >
+            Deletar
+          </Button>
+        </Td>
+      </Tr>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Customer
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Você tem certeza?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancelar
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => handleDeleteUser(id)}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
-
-  <AlertDialog
-    isOpen={isOpen}
-    leastDestructiveRef={cancelRef}
-    onClose={onClose}
-  >
-    <AlertDialogOverlay>
-      <AlertDialogContent>
-        <AlertDialogHeader fontSize="lg" fontWeight="bold">
-          Delete Customer
-        </AlertDialogHeader>
-
-        <AlertDialogBody>Você tem certeza? </AlertDialogBody>
-
-        <AlertDialogFooter>
-          <Button ref={cancelRef} onClick={onClose}>
-            Cancelar
-          </Button>
-          <Button colorScheme="red" onClick={() => handleDeleteUser(id)} ml={3}>
-            Delete
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialogOverlay>
-  </AlertDialog>;
 }
