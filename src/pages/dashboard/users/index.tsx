@@ -46,10 +46,14 @@ export default function CreateUser() {
 
   const { isOpen, onOpen, onClose, status } = usePersistUserModal();
 
-  async function handleSearch(name: string) {
+  async function handleSearchBox(name: string) {
+    console.log(name);
+    setSearch(name);
     const response = await api.get(`users`, {
       params: { name: name },
     });
+
+    console.log(response);
     return response.data;
   }
 
@@ -82,7 +86,11 @@ export default function CreateUser() {
               />
             </HStack>
             <Flex mx="auto" p="8" justify="space-between" align="center">
-              <SearchBox value={search} onSearch={() => {}} />
+              <SearchBox
+                name="searchBox"
+                value={search}
+                onChange={(event) => handleSearchBox(event.target.value)}
+              />
               {!isLoading && isFetching && (
                 <Spinner size="sm" color="gray.500" mr="auto" ml="4" />
               )}
@@ -175,8 +183,3 @@ export default function CreateUser() {
     </Flex>
   );
 }
-
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-  const apiClient = setupAPIClient(ctx);
-  return { props: {} };
-});

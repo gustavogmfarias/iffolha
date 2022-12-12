@@ -27,14 +27,14 @@ export function NavLink({
       <Icon as={iconName} fontSize="12" color="project.text" mr="5" />
 
       {!!link ? (
-        <Link href={link} passHref>
-          <ChakraLink {...rest} onClick={onMouseClick}>
-            <Text mr="10" fontSize="12" color="project.text">
-              {name}
-            </Text>
-          </ChakraLink>
-        </Link>
+        // <Link href={link} passHref>
+        <ChakraLink href={link} {...rest} onClick={onMouseClick}>
+          <Text mr="10" fontSize="12" color="project.text">
+            {name}
+          </Text>
+        </ChakraLink>
       ) : (
+        // </Link>
         <ChakraLink {...rest} onClick={onMouseClick}>
           <Text mr="10" fontSize="12" color="project.text">
             {name}

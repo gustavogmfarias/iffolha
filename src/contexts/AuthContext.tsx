@@ -41,18 +41,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const { "nextauth.token": token } = parseCookies();
-    if (token) {
-      api
-        .get("/users/profile")
-        .then((response) => {
-          const { avatarUrl, email, id, name, role } = response.data;
 
-          setUser({ avatarUrl, email, id, name, role });
-        })
-        .catch((error) => {
-          signOut();
-        });
+    async function userProfile() {
+      if (token) {
+        await api
+          .get("/users/profile")
+          .then((response) => {
+            console.log("1", "chegou aqui?");
+            const { avatarUrl, email, id, name, role } = response.data;
+
+            setUser({ avatarUrl, email, id, name, role });
+          })
+          .catch((error) => {
+            console.log(error, "error 1 useeffect authcontext");
+            // signOut();
+          });
+      }
     }
+
+    userProfile();
   }, []);
 
   async function signIn({ email, password }: SignInCredentials) {
@@ -71,7 +78,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-    api
+    await api
       .get("/users/profile")
       .then((response) => {
         const { avatarUrl, email, id, name, role } = response.data;

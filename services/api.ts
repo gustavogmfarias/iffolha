@@ -1,16 +1,19 @@
 import axios, { AxiosError } from "axios";
+import { GetServerSidePropsContext } from "next";
 import { parseCookies, setCookie } from "nookies";
 import { signOut } from "../src/contexts/AuthContext";
 import { AuthTokenError } from "./errors/AuthTokenError";
 
 let isRefreshing = false;
-let failedRequestQueue = [];
+let failedRequestsQueue = [];
 
 interface AxiosErrorResponse {
-  code?: string;
+  message?: string;
 }
 
-export function setupAPIClient(ctx = undefined) {
+export function setupAPIClient(
+  ctx: GetServerSidePropsContext | undefined = undefined
+) {
   let cookies = parseCookies(ctx);
 
   const api = axios.create({
@@ -24,24 +27,24 @@ export function setupAPIClient(ctx = undefined) {
     (response) => {
       return response;
     },
-    (error: AxiosError<AxiosErrorResponse>) => {
-      if (error.response.status === 401) {
-        if (error.response.data?.code === "Refresh Token doesn't Exists") {
+    async (error: AxiosError<AxiosErrorResponse>) => {
+      console.log(error.response?.status);
+      if (error.response?.status === 401) {
+        if (error.response?.data.message === "Invalid Token") {
           cookies = parseCookies(ctx);
 
           const { "nextauth.refreshToken": refreshToken } = cookies;
-
           const originalConfig = error.config;
 
           if (!isRefreshing) {
             isRefreshing = true;
+
             api
               .post("/refresh-token", { refreshToken })
               .then((response) => {
                 const { token } = response.data;
-
                 setCookie(ctx, "nextauth.token", token, {
-                  maxAge: 60 * 15, // 15 minutos
+                  maxAge: 60 * 60 * 24 * 30, //30 dias
                   path: "/",
                 });
 
@@ -50,23 +53,26 @@ export function setupAPIClient(ctx = undefined) {
                   "nextauth.refreshToken",
                   response.data.refreshToken,
                   {
-                    maxAge: 60 * 60 * 24 * 15, // 30 days
+                    maxAge: 60 * 60 * 24 * 30, //30 dias
                     path: "/",
                   }
                 );
 
                 api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-                failedRequestQueue.forEach((request) =>
-                  request.onSucess(token)
+                failedRequestsQueue.forEach((request) =>
+                  request.onSuccess(token)
                 );
-                failedRequestQueue = [];
+
+                failedRequestsQueue = [];
               })
               .catch((err) => {
-                failedRequestQueue.forEach((request) => request.onFailure(err));
-                failedRequestQueue = [];
+                failedRequestsQueue.forEach((request) =>
+                  request.onFailure(err)
+                );
+                failedRequestsQueue = [];
 
-                if (typeof window !== "undefined") {
+                if (process.browser) {
                   signOut();
                 }
               })
@@ -74,9 +80,10 @@ export function setupAPIClient(ctx = undefined) {
                 isRefreshing = false;
               });
           }
+
           return new Promise((resolve, reject) => {
-            failedRequestQueue.push({
-              onSucess: (token: string) => {
+            failedRequestsQueue.push({
+              onSuccess: (token: string) => {
                 originalConfig.headers["Authorization"] = `Bearer ${token}`;
                 resolve(api(originalConfig));
               },
@@ -85,8 +92,12 @@ export function setupAPIClient(ctx = undefined) {
               },
             });
           });
+          //a) todas as promises javascript tem um resolve e um reject com parametro. Resolve é o que vai acontecer quando o set refresh estiver atualizado. E o reject é tudo caso o processo de set refresh token tenha dado errado.
+          //b) dentro do array de failed, dou um push no objeto
+          //c) Faço as funções caso de certo ou errado.
         } else {
-          if (typeof window !== "undefined") {
+          //deslogar usuário
+          if (process.browser) {
             signOut();
           } else {
             return Promise.reject(new AuthTokenError());
@@ -97,5 +108,6 @@ export function setupAPIClient(ctx = undefined) {
       return Promise.reject(error);
     }
   );
+
   return api;
 }

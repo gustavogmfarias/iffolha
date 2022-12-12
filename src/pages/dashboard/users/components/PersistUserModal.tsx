@@ -28,13 +28,26 @@ import { useEffect, useState } from "react";
 import { SelectInsideCreators } from "../../../../components/Form/SelectInsideCreators";
 import { usePersistUserModal } from "../contexts/ModalPersistUserContext";
 
+type User = {
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
+  role: string;
+  id: string;
+  avatar: string;
+};
+
 type ModalPersistUserProps = {
+  user?: User;
+  isUpdate?: boolean;
   isOpen: boolean;
   onClose: () => void;
   onOpen: () => void;
 };
 
-type CreateUserFormData = {
+type PersistUserFormData = {
   email: string;
   name: string;
   lastName: string;
@@ -44,7 +57,7 @@ type CreateUserFormData = {
   avatar?: string;
 };
 
-const createUserFormSchema = yup.object().shape({
+const persistUserFormSchema = yup.object().shape({
   name: yup.string().required("Nome é obrigatório"),
   lastName: yup.string().required("Sobrenome é obrigatório"),
   role: yup
@@ -71,22 +84,24 @@ export default function PersistUserModal({
   isOpen,
   onClose,
   onOpen,
+  isUpdate = false,
+  user,
 }: ModalPersistUserProps) {
   const { status, setStatus } = usePersistUserModal();
 
   const [serverSideError, setServerSideError] = useState("");
 
   const { register, handleSubmit, formState, reset } = useForm({
-    resolver: yupResolver(createUserFormSchema),
+    resolver: yupResolver(persistUserFormSchema),
   });
   const { errors } = formState;
 
   const router = useRouter();
   const [avatar, setAvatar] = useState("");
-  const [avatarUpload, setAvatarUpload] = useState("");
+  const [avatarUpload, setAvatarUpload] = useState<any>();
 
   const createUser = useMutation(
-    async ({ name, lastName, email, password, role }: CreateUserFormData) => {
+    async ({ name, lastName, email, password, role }: PersistUserFormData) => {
       const response = await api.post("users", {
         name,
         lastName,
@@ -115,14 +130,38 @@ export default function PersistUserModal({
     }
   );
 
-  const handleInputAvatar = (e) => {
+  const handleInputAvatar = async (e) => {
+    // const fr = new FileReader();
+
+    // fr.readAsArrayBuffer(e.target.files[0]);
+
+    // fr.onload = () => {
+    //   setAvatarUpload(fr.result);
+    // };
+
     if (e.target.files.length !== 0) {
-      setAvatar(URL.createObjectURL(e.target.files[0]));
-      setAvatarUpload(e.target.files[0]);
+      await setAvatar(URL.createObjectURL(e.target.files[0]));
+      await setAvatarUpload(e.target.files[0]);
     }
   };
 
-  const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
+  const handleCreateUser: SubmitHandler<PersistUserFormData> = async (
+    values
+  ) => {
+    try {
+      userCreated = await createUser.mutateAsync(values);
+      setServerSideError("");
+    } catch (err) {
+      setServerSideError(err.response.data.message);
+      {
+        setTimeout(() => {
+          setServerSideError("");
+        }, 5000);
+      }
+    }
+  };
+
+  const handleUpdateUser: SubmitHandler<PersistUserFormData> = async (
     values
   ) => {
     try {
@@ -141,26 +180,30 @@ export default function PersistUserModal({
   let userAvatar;
 
   useEffect(() => {
-    const formData = new FormData();
-
-    formData.append("avatar", avatar);
-    console.log(formData, "1");
-
     async function uploadImage() {
+      const formData = new FormData();
+
+      formData.append("avatar", avatarUpload);
+      console.log(avatarUpload, "avatar deve estar binário");
+      console.log(formData, "1");
+
       if (createUser.isSuccess) {
-        async () => {
+        try {
           userAvatar = await api.patch(
             `/users/avatar/${userCreated.id}`,
-            formData,
+            formData.values[0],
             {
               headers: {
                 "Content-Type": "multipart/form-data",
               },
             }
           );
+
           console.log(userAvatar, "useravatar");
           console.log(3);
-        };
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
 
@@ -171,10 +214,21 @@ export default function PersistUserModal({
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <ModalContent>
-        <ModalHeader>Criar usuário</ModalHeader>
+        {!!isUpdate ? (
+          <ModalHeader>Editar {user.name}</ModalHeader>
+        ) : (
+          <ModalHeader>Criar usuário</ModalHeader>
+        )}
         <ModalCloseButton />
         <ModalBody>
-          <Box as="form" onSubmit={handleSubmit(handleCreateUser)}>
+          <Box
+            as="form"
+            onSubmit={
+              !!isUpdate
+                ? handleSubmit(handleUpdateUser)
+                : handleSubmit(handleCreateUser)
+            }
+          >
             <Flex justify="center" mb="2" dir="column">
               <Avatar size="lg" src={avatar} />
               <Input

@@ -47,7 +47,7 @@ export default function Home() {
       await signIn(values);
     } catch (err) {
       console.log(err);
-      setErrorSignIn(err.response.data.message);
+      setErrorSignIn(String(err.message));
     }
   };
 
@@ -163,7 +163,3 @@ export default function Home() {
     </Flex>
   );
 }
-
-export const getServerSideProps = withSSRGuest(async (ctx) => {
-  return { props: {} }; //caso não tenha o cookie, não é pra fazer nada
-});

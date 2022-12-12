@@ -4,45 +4,38 @@ import {
   GetServerSidePropsResult,
 } from "next";
 import { destroyCookie, parseCookies } from "nookies";
-import { AuthTokenError } from "../services/errors/AuthTokenError";
 import decode from "jwt-decode";
+
+import { AuthTokenError } from "../services/errors/AuthTokenError";
 import { validateUserPermissions } from "./validateUserPermissions";
 
-type WithSSRAuthOptions = { role: string };
+type withSSRAuthOptions = {
+  permissions?: string[];
+  roles?: string[];
+};
 
-export function withSSRAuth<P>(
+export function withSSRAuth<P extends { [key: string]: any }>(
   fn: GetServerSideProps<P>,
-  options?: WithSSRAuthOptions
+  options?: withSSRAuthOptions
 ) {
-  //fn: GetServerSideProps significa que a função vai receber como parametro uma outra função
-
   return async (
     ctx: GetServerSidePropsContext
   ): Promise<GetServerSidePropsResult<P>> => {
-    const cookies = parseCookies(ctx); //ctx é o contexto, no caso, next page context
+    const cookies = parseCookies(ctx);
     const token = cookies["nextauth.token"];
 
-    if (!token)
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-
-    if (options) {
-      const user = decode<{ role: string }>(token);
-      const { role } = options;
-
-      const userHasValidPermissions = validateUserPermissions({
-        user,
-        role,
-      });
-
-      if (!userHasValidPermissions) {
-        return { redirect: { destination: "/dashboard", permanent: false } };
-      }
+    if (!token) {
+      return { redirect: { destination: "/", permanent: false } };
     }
+
+    const user = decode(token);
+    const { permissions, roles } = options;
+
+    const useHasValidPermissions = validateUserPermissions({
+      user,
+      permissions,
+      roles,
+    });
 
     try {
       return await fn(ctx);
@@ -50,15 +43,14 @@ export function withSSRAuth<P>(
       if (err instanceof AuthTokenError) {
         destroyCookie(ctx, "nextauth.token");
         destroyCookie(ctx, "nextauth.refreshToken");
-        return { redirect: { destination: "/", permanent: false } };
+
+        return {
+          redirect: {
+            destination: "/",
+            permanent: false,
+          },
+        };
       }
     }
-
-    return {
-      redirect: {
-        destination: "/error", // Em caso de um erro não esperado, você pode redirecionar para uma página publica de erro genérico
-        permanent: false,
-      },
-    };
   };
 }

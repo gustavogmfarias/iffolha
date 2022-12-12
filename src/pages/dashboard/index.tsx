@@ -15,9 +15,3 @@ export default function Dashboard() {
     </Flex>
   );
 }
-
-export const getServerSideProps = withSSRAuth(async (ctx) => {
-  const apiClient = setupAPIClient(ctx); //aqui coloca-se o contexto porque é o contexto do lado do servidor
-
-  return { props: {} }; //caso não tenha o cookie, não é pra fazer nada
-});
