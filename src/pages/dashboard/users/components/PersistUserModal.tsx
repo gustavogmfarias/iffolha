@@ -44,7 +44,7 @@ type ModalPersistUserProps = {
   isUpdate?: boolean;
   isOpen: boolean;
   onClose: () => void;
-  onOpen: () => void;
+  onOpen: (user?: User) => void;
 };
 
 type PersistUserFormData = {
@@ -224,7 +224,7 @@ export default function PersistUserModal({
           <Box
             as="form"
             onSubmit={
-              !!isUpdate
+              isUpdate
                 ? handleSubmit(handleUpdateUser)
                 : handleSubmit(handleCreateUser)
             }

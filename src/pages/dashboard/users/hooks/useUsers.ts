@@ -47,10 +47,10 @@ export async function getUsers(
   return { users, totalCount };
 }
 
-export function useUsers(page: string, perPage: string) {
+export function useUsers(page: string, perPage: string, search: string) {
   return useQuery(
-    ["users", page, perPage],
-    () => getUsers(page, perPage, name),
+    ["users", page, perPage, search],
+    () => getUsers(page, perPage, search),
     {
       staleTime: 1000 * 60 * 10,
     }

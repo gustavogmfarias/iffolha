@@ -8,13 +8,24 @@ import {
   useState,
 } from "react";
 
+type User = {
+  name: string;
+  lastName: string;
+  email: string;
+  role: string;
+  id: string;
+  avatarUrl: string;
+};
+
 interface ModalPersistUserProviderProps {
   children: ReactNode;
 }
 
 type ModalPersistUserProviderData = {
+  user?: User;
+  isUpdate: boolean;
   isOpen: boolean;
-  onOpen: () => void;
+  onOpen: (user?: User) => void;
   onClose: () => void;
   status: string;
   setStatus: (status: string) => void;
@@ -37,7 +48,14 @@ export function ModalPersistUserProvider({
 
   return (
     <ModalPersistUserContext.Provider
-      value={{ isOpen, onClose, onOpen, status, setStatus }}
+      value={{
+        isOpen,
+        onClose,
+        onOpen,
+        status,
+        setStatus,
+        isUpdate: true,
+      }}
     >
       {children}
     </ModalPersistUserContext.Provider>

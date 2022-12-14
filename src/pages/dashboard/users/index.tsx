@@ -30,7 +30,7 @@ import { SearchBox } from "./components/SearchBox";
 import { TrowUser } from "./components/TrowUser";
 import PersistUserModal from "./components/PersistUserModal";
 import { usePersistUserModal } from "./contexts/ModalPersistUserContext";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { queryClient } from "../../../../services/queryClient";
 
 export default function CreateUser() {
@@ -41,20 +41,14 @@ export default function CreateUser() {
   const [page, setPage] = useState(1);
   const { data, isLoading, isFetching, error } = useUsers(
     String(page),
-    perPage
+    perPage,
+    search
   );
 
   const { isOpen, onOpen, onClose, status } = usePersistUserModal();
 
   async function handleSearchBox(name: string) {
-    console.log(name);
     setSearch(name);
-    const response = await api.get(`users`, {
-      params: { name: name },
-    });
-
-    console.log(response);
-    return response.data;
   }
 
   async function handlePrefetchUser(userId: string) {
@@ -63,7 +57,6 @@ export default function CreateUser() {
       async () => {
         const response = await api.get(`users/findbyid?id=${userId}`);
         return response.data;
-        console.log(response);
       },
       { staleTime: 1000 * 60 * 10 }
     ); //10 minutos
@@ -106,7 +99,7 @@ export default function CreateUser() {
               )}
               <Button
                 as="a"
-                onClick={onOpen}
+                onClick={() => onOpen()}
                 size="sm"
                 fontSize="sm"
                 colorScheme="green"
@@ -179,7 +172,11 @@ export default function CreateUser() {
           </Stack>
         </Flex>
       </Flex>
-      <PersistUserModal isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
+      <PersistUserModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onOpen={() => onOpen()}
+      />
     </Flex>
   );
 }
