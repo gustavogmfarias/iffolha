@@ -15,11 +15,20 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { RiPencilLine } from "react-icons/ri";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { api } from "../../../../../services/apiClient";
 import { queryClient } from "../../../../../services/queryClient";
 import { usePersistUserModal } from "../contexts/ModalPersistUserContext";
 import { useRef } from "react";
+
+type User = {
+  name: string;
+  lastName: string;
+  email: string;
+  role: string;
+  id: string;
+  avatarUrl: string;
+};
 
 interface TrowUserProps {
   id: string;
@@ -42,8 +51,9 @@ export function TrowUser({
   createdAt,
   prefetchUser,
 }: TrowUserProps) {
-  const { status, setStatus } = usePersistUserModal();
+  const { status, setStatus, onOpen: openModal } = usePersistUserModal();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const cancelRef = useRef();
 
   const deleteUser = useMutation(
@@ -77,6 +87,11 @@ export function TrowUser({
     console.log(userDeleted);
   };
 
+  const { data } = useQuery("user");
+  const handleUpdateUser = async (user: User) => {
+    openModal(userToUpdate);
+  };
+
   return (
     <>
       <Tr>
@@ -84,34 +99,38 @@ export function TrowUser({
           <Avatar size="sm" name={name + " " + lastName} src={avatarLink} />
         </Td>
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Text>{name}</Text>
           </Link>
         </Td>
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Text>{lastName}</Text>
           </Link>
         </Td>
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Text>{email}</Text>
           </Link>
         </Td>
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Text>{role}</Text>
           </Link>
         </Td>
 
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Text>{createdAt}</Text>
           </Link>
         </Td>
         <Td>
-          <Link onMouseEnter={prefetchUser}>
+          <Link onMouseEnter={() => prefetchUser(id)}>
             <Button
+              onClick={() => {
+                const userToUpdate = data.find((user) => user.id === id);
+                handleUpdateUser(userToUpdate);
+              }}
               cursor="pointer"
               as="a"
               size="sm"
