@@ -32,19 +32,15 @@ type User = {
   name: string;
   lastName: string;
   email: string;
-  password: string;
-  passwordConfirmation: string;
   role: string;
   id: string;
-  avatar: string;
+  avatarUrl: string;
 };
 
 type ModalPersistUserProps = {
-  user?: User;
-  isUpdate?: boolean;
   isOpen: boolean;
   onClose: () => void;
-  onOpen: (user?: User) => void;
+  onOpen: () => void;
 };
 
 type PersistUserFormData = {
@@ -84,10 +80,9 @@ export default function PersistUserModal({
   isOpen,
   onClose,
   onOpen,
-  isUpdate = false,
-  user,
 }: ModalPersistUserProps) {
-  const { status, setStatus } = usePersistUserModal();
+  const { userToUpdate, isUpdate, setIsUpdate, setUserToUpdate } =
+    usePersistUserModal();
 
   const [serverSideError, setServerSideError] = useState("");
 
@@ -99,6 +94,13 @@ export default function PersistUserModal({
   const router = useRouter();
   const [avatar, setAvatar] = useState("");
   const [avatarUpload, setAvatarUpload] = useState<any>();
+
+  const [name, setName] = useState<string>();
+  const [lastName, setLastName] = useState<string>();
+  const [password, setPassword] = useState<string>();
+  const [passwordConfirmation, setPasswordConfimation] = useState<string>();
+  const [role, setRole] = useState<string>();
+  const [email, setEmail] = useState<string>();
 
   const createUser = useMutation(
     async ({ name, lastName, email, password, role }: PersistUserFormData) => {
@@ -129,6 +131,28 @@ export default function PersistUserModal({
       },
     }
   );
+
+  function setAllFieldsNull() {
+    setName("");
+    setLastName("");
+    setEmail("");
+    setRole("");
+    setPassword("");
+    setPasswordConfimation("");
+    setAvatar("");
+    setAvatarUpload("");
+  }
+
+  function setAllUserDataOnFields(user: User) {
+    setName(userToUpdate.name);
+    setLastName(userToUpdate.lastName);
+    setEmail(userToUpdate.email);
+    setRole(userToUpdate.role);
+    setPassword("");
+    setPasswordConfimation("");
+    setAvatar(userToUpdate.avatarUrl);
+    setAvatarUpload("");
+  }
 
   const handleInputAvatar = async (e) => {
     // const fr = new FileReader();
@@ -210,12 +234,21 @@ export default function PersistUserModal({
     uploadImage();
   }, [createUser.isSuccess]);
 
+  console.log(userToUpdate, "persistusermodal");
+
+  function onModalClose() {
+    setUserToUpdate(null);
+    setIsUpdate(false);
+    setAllFieldsNull();
+    onClose();
+  }
+
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose}>
+    <Modal isCentered isOpen={isOpen} onClose={onModalClose}>
       <ModalOverlay bg="none" backdropFilter="auto" backdropBlur="2px" />
       <ModalContent>
         {!!isUpdate ? (
-          <ModalHeader>Editar {user.name}</ModalHeader>
+          <ModalHeader>Editar {userToUpdate.name}</ModalHeader>
         ) : (
           <ModalHeader>Criar usuário</ModalHeader>
         )}
@@ -245,6 +278,7 @@ export default function PersistUserModal({
                 label="Nome:"
                 name="name"
                 type="text"
+                value={name}
                 error={errors.name}
                 {...register("name")}
               ></InputInsideCreator>
@@ -252,6 +286,7 @@ export default function PersistUserModal({
                 label="Sobrenome:"
                 name="lastName"
                 type="text"
+                value={lastName}
                 error={errors.lastName}
                 {...register("lastName")}
               ></InputInsideCreator>
@@ -259,6 +294,7 @@ export default function PersistUserModal({
                 label="E-mail:"
                 name="email"
                 type="email"
+                value={email}
                 error={errors.email}
                 {...register("email")}
               ></InputInsideCreator>
@@ -266,6 +302,7 @@ export default function PersistUserModal({
                 label="Senha:"
                 name="password"
                 type="password"
+                value={password}
                 error={errors.password}
                 {...register("password")}
               ></InputInsideCreator>
@@ -273,11 +310,13 @@ export default function PersistUserModal({
                 name="passwordConfirmation"
                 type="password"
                 label="Confirmação da senha"
+                value={passwordConfirmation}
                 error={errors.passwordConfirmation}
                 {...register("passwordConfirmation")}
               ></InputInsideCreator>
 
               <SelectInsideCreators
+                value={role}
                 error={errors.role}
                 {...register("role")}
                 name="role"
@@ -310,7 +349,7 @@ export default function PersistUserModal({
           </Box>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={onClose}>Cancelar</Button>
+          <Button onClick={onModalClose}>Cancelar</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

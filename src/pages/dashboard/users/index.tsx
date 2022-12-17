@@ -38,7 +38,9 @@ export default function CreateUser() {
   let name: string;
 
   const [search, setSearch] = useState("");
+
   const [page, setPage] = useState(1);
+
   const { data, isLoading, isFetching, error } = useUsers(
     String(page),
     perPage,

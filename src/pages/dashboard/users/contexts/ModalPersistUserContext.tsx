@@ -22,13 +22,13 @@ interface ModalPersistUserProviderProps {
 }
 
 type ModalPersistUserProviderData = {
-  user?: User;
+  userToUpdate?: User;
   isUpdate: boolean;
   isOpen: boolean;
-  onOpen: (user?: User) => void;
+  onOpen: () => void;
   onClose: () => void;
-  status: string;
-  setStatus: (status: string) => void;
+  setIsUpdate: (value: boolean) => void;
+  setUserToUpdate: (user: User) => void;
 };
 
 const ModalPersistUserContext = createContext(
@@ -39,7 +39,8 @@ export function ModalPersistUserProvider({
   children,
 }: ModalPersistUserProviderProps) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [status, setStatus] = useState("");
+  const [userToUpdate, setUserToUpdate] = useState<User>(null);
+  const [isUpdate, setIsUpdate] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -49,12 +50,13 @@ export function ModalPersistUserProvider({
   return (
     <ModalPersistUserContext.Provider
       value={{
+        userToUpdate,
         isOpen,
         onClose,
         onOpen,
-        status,
-        setStatus,
-        isUpdate: true,
+        isUpdate,
+        setIsUpdate,
+        setUserToUpdate,
       }}
     >
       {children}

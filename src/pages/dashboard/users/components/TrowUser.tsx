@@ -51,7 +51,11 @@ export function TrowUser({
   createdAt,
   prefetchUser,
 }: TrowUserProps) {
-  const { status, setStatus, onOpen: openModal } = usePersistUserModal();
+  const {
+    setIsUpdate,
+    setUserToUpdate,
+    onOpen: openModal,
+  } = usePersistUserModal();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const cancelRef = useRef();
@@ -87,9 +91,35 @@ export function TrowUser({
     console.log(userDeleted);
   };
 
-  const { data } = useQuery("user");
-  const handleUpdateUser = async (user: User) => {
-    openModal(userToUpdate);
+  const { data } = useQuery<User>(["user", id]);
+
+  const handleUpdateUser = async (id: string) => {
+    if (!data) {
+      await queryClient.fetchQuery(
+        ["user", id],
+        async () => {
+          const response = await api.get(`users/findbyid?id=${id}`);
+          return response.data;
+        },
+        { staleTime: 1000 * 60 * 10 }
+      );
+    }
+
+    const user: User = {
+      name: data.name,
+      lastName: data.lastName,
+      email: data.email,
+      role: data.role,
+      id: data.id,
+      avatarUrl: data.avatarUrl,
+    };
+    setIsUpdate(true);
+    setUserToUpdate(user);
+
+    if (user) {
+      openModal();
+      console.log(user);
+    }
   };
 
   return (
@@ -127,9 +157,9 @@ export function TrowUser({
         <Td>
           <Link onMouseEnter={() => prefetchUser(id)}>
             <Button
+              onMouseEnter={() => prefetchUser(id)}
               onClick={() => {
-                const userToUpdate = data.find((user) => user.id === id);
-                handleUpdateUser(userToUpdate);
+                handleUpdateUser(id);
               }}
               cursor="pointer"
               as="a"
